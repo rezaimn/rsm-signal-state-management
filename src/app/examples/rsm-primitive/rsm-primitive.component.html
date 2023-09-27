@@ -1,0 +1,33 @@
+<div class="container">
+  <h1>Normal Counter App</h1>
+  <div class="counter">
+      <button id="increment-btn" (click)="increment()">+</button>
+      <div id="counter-value">{{counterCurrentValue()}}</div>
+      <button id="decrement-btn" (click)="decrement()">-</button>
+  </div>
+  <button id="reset" (click)="resetCounter()">Reset</button>
+</div>
+<br>
+<hr class="dotted">
+<div class="container">
+  <h1>Counter With Side Effect</h1>
+  <div class="counter">
+      <button id="increment-btn" (click)="delayedIncrement()">+</button>
+      <button id="decrement-btn" (click)="delayedDecrement()">-</button>
+  </div>
+</div>
+<br>
+<hr class="dotted">
+<div class="container" >
+  <label class="label-text">
+    <input type="text" class="text" name="text" placeholder="Text" tabindex="1" (keyup)="textChange($event)"/>
+  </label>
+</div>
+<br>
+<br>
+<hr class="dotted">
+<br>
+<br>
+<div class="container" >
+  <h3>{{textCurrentValue()}}</h3>
+</div>
