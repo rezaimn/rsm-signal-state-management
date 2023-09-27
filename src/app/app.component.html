@@ -1,0 +1,19 @@
+<div class="header">
+  <div class="header-left">
+    <a routerLinkActive="active" [routerLink]="['/primitive']">Primitive</a>
+    <a routerLinkActive="active" [routerLink]="['/entity']">Entity</a>
+    <a routerLinkActive="active" [routerLink]="['/queue']">Queue</a>
+    <a routerLinkActive="active" [routerLink]="['/stack']">Stack</a>
+  </div>
+</div>
+<div class="content">
+  <div class="left">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="right">
+    <div *ngIf="currentRoute === '/primitive'">
+      <p>Counter : {{rsmPrimitiveState().counter}}</p>
+      <p>Text : {{rsmPrimitiveState().text}}</p>
+    </div>
+  </div>
+</div>
