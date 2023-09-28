@@ -1,19 +1,19 @@
 <div class="container">
   <h1>Normal Counter App</h1>
   <div class="counter">
-      <button id="increment-btn" (click)="increment()">+</button>
-      <div id="counter-value">{{counterCurrentValue()}}</div>
-      <button id="decrement-btn" (click)="decrement()">-</button>
+      <button class="increment-btn" (click)="increment()">+</button>
+      <div class="counter-value">{{counterCurrentValue()}}</div>
+      <button class="decrement-btn" (click)="decrement()">-</button>
   </div>
-  <button id="reset" (click)="resetCounter()">Reset</button>
+  <button class="reset" (click)="resetCounter()">Reset</button>
 </div>
 <br>
 <hr class="dotted">
 <div class="container">
   <h1>Counter With Side Effect</h1>
   <div class="counter">
-      <button id="increment-btn" (click)="delayedIncrement()">+</button>
-      <button id="decrement-btn" (click)="delayedDecrement()">-</button>
+      <button class="increment-btn" (click)="delayedIncrement()">+</button>
+      <button class="decrement-btn" (click)="delayedDecrement()">-</button>
   </div>
 </div>
 <br>

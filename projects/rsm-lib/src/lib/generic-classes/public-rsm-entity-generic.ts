@@ -51,7 +51,7 @@ export class PublicEntityRsmGenericClass<StatesModel extends object> extends Pub
     value: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
     const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
+    console.log(currentValue?.length, index)
     if (index >= 0 && index <= currentValue?.length) {
       // Insert the item at the specified index and update the state.
       const newArray = [...currentValue];
@@ -133,8 +133,7 @@ export class PublicEntityRsmGenericClass<StatesModel extends object> extends Pub
     deleteCount: number
   ): void {
     const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    if (index >= 0 && index < currentValue?.length) {
+    if (index >= 0 && index < currentValue?.length && index + deleteCount <= currentValue?.length) {
       // Remove items from the specified index and update the state.
       this.updateStatePropertyByKey(key, [
         ...currentValue.slice(0, index),
@@ -144,7 +143,7 @@ export class PublicEntityRsmGenericClass<StatesModel extends object> extends Pub
   }
 
   // Remove an item from an array property by its ID.
-  public removeArrayItemById<K extends keyof StatesModel>(
+  public removeArrayItemByPropertyValue<K extends keyof StatesModel>(
     statePropertyKey: K,
     removeKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     itemId: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
@@ -161,59 +160,15 @@ export class PublicEntityRsmGenericClass<StatesModel extends object> extends Pub
   }
 
   // Find an item in an array property by its ID.
-  public getArrayItemById<K extends keyof StatesModel>(
+  public getArrayItemByPropertyValue<K extends keyof StatesModel>(
     statePropertyKey: K,
-    removeKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
-    itemId: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
+    compareKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
+    compareValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
   ): StatesModel[K] extends Array<infer U> ? U : never {
     const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     const item = currentValue?.find((item: StatesModel[K] extends Array<infer U> ? U : never) => {
-      return item[removeKey] == itemId;
+      return item[compareKey] == compareValue;
     }) as StatesModel[K] extends Array<infer U> ? U : never;
     return item;
-  }
-
-  // Push an item to the end of an array property (stack).
-  public pushToStack<K extends keyof StatesModel>(
-    key: K,
-    value: StatesModel[K] extends Array<infer U> ? U : never
-  ): void {
-    this.addItemToEndOfArray(key, value);
-  }
-
-  // Pop an item from the end of an array property (stack).
-  public popFromStack<K extends keyof StatesModel>(
-    key: K
-  ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-    if(currentValue?.length > 0) {
-      // Remove and return the last item from the array.
-      const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];
-      this.removeArrayItemFromEndOfArray(key);
-      return removedItem;
-    }
-    return null;
-  }
-
-  // Add an item to the start of an array property (queue).
-  public addItemToQueue<K extends keyof StatesModel>(
-    key: K,
-    value: StatesModel[K] extends Array<infer U> ? U : never
-  ): void {
-    this.addItemToStartOfArray(key, value);
-  }
-
-  // Remove an item from the start of an array property (queue).
-  public removeItemFromQueue<K extends keyof StatesModel>(
-    key: K
-  ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-    if(currentValue?.length > 0) {
-      // Remove and return the first item from the array.
-      const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];
-      this.removeArrayItemFromEndOfArray(key);
-      return removedItem;
-    }
-    return null;
   }
 }
