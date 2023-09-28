@@ -1,7 +1,8 @@
 import { NgModule } from "@angular/core";
 import { Route, RouterModule, Router } from "@angular/router";
 import { RsmPrimitiveComponent } from "./examples/rsm-primitive/rsm-primitive.component";
-import { RsmEntityComponent } from "./examples/rsm-entity/rsm-entity.component";
+import { RsmEntityArrayComponent } from "./examples/rsm-entity-array/rsm-entity-array.component";
+import { RsmEntityObjectComponent } from "./examples/rsm-entity-object/rsm-entity-object.component";
 import { RsmQueueComponent } from "./examples/rsm-queue/rsm-queue.component";
 import { RsmStackComponent } from "./examples/rsm-stack/rsm-stack.component";
 
@@ -17,8 +18,12 @@ const appRoutes:Route[] = [
     component: RsmPrimitiveComponent
   },
   {
-    path: 'entity',
-    component: RsmEntityComponent
+    path: 'entity-array',
+    component: RsmEntityArrayComponent
+  },
+  {
+    path: 'entity-object',
+    component: RsmEntityObjectComponent
   },
   {
     path: 'queue',

@@ -69,3 +69,29 @@ body {
     float: none;
   }
 }
+
+.array-item {
+  height: 80px;
+  width: 150px;
+  border-radius: 10px;
+  background-color: rgba(255, 0, 0, 0.187);
+  margin-top: 20px;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 16px;
+}
+
+p {
+  margin: 5px;
+}
+
+.array {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.selected-item {
+  border-color: rgb(200, 13, 13);
+}

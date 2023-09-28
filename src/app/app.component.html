@@ -1,7 +1,8 @@
 <div class="header">
   <div class="header-left">
     <a routerLinkActive="active" [routerLink]="['/primitive']">Primitive</a>
-    <a routerLinkActive="active" [routerLink]="['/entity']">Entity</a>
+    <a routerLinkActive="active" [routerLink]="['/entity-array']">Entity-Array</a>
+    <a routerLinkActive="active" [routerLink]="['/entity-object']">Entity-Object</a>
     <a routerLinkActive="active" [routerLink]="['/queue']">Queue</a>
     <a routerLinkActive="active" [routerLink]="['/stack']">Stack</a>
   </div>
@@ -14,6 +15,15 @@
     <div *ngIf="currentRoute === '/primitive'">
       <p>Counter : {{rsmPrimitiveState().counter}}</p>
       <p>Text : {{rsmPrimitiveState().text}}</p>
+    </div>
+    <div *ngIf="currentRoute === '/entity-array'" >
+      <h3>Array size : {{arraySize()}}</h3>
+      <div class="array">
+        <div class="array-item" *ngFor="let item of rsmEntityState().arraySample">
+          <p>{{item.id}}</p>
+          <p>{{item.name}}</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

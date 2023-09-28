@@ -134,7 +134,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
   ): void {
     const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
-    if (index >= 0 && index < currentValue?.length) {
+    if (index >= 0 && index < currentValue?.length && index + deleteCount <= currentValue?.length) {
       // Remove items from the array based on the index and count, then update the state.
       this.updateStatePropertyByKey(key, [
         ...currentValue.slice(0, index),
@@ -144,24 +144,24 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
   }
 
   // Remove an array item by comparing a property value.
-  protected removeArrayItemById<K extends keyof StatesModel>(
+  protected removeArrayItemByPropertyValue<K extends keyof StatesModel>(
     statePropertyKey: K,
-    removeKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
-    itemId: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
+    compareKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
+    compareValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
   ): void {
     const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (Array.isArray(currentValue)) {
       // Filter out items based on the specified property value and update the state.
       const updatedArray = currentValue.filter((item: StatesModel[K] extends Array<infer U> ? U : never) => {
-        return item[removeKey] != itemId;
+        return item[compareKey] != compareValue;
       }) as StatesModel[K];
       this.updateStatePropertyByKey(statePropertyKey, updatedArray);
     }
   }
 
   // Find and return an array item by comparing a property value.
-  protected getArrayItemById<K extends keyof StatesModel>(
+  protected getArrayItemByPropertyValue<K extends keyof StatesModel>(
     statePropertyKey: K,
     removeKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     itemId: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
@@ -172,49 +172,5 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
     }) as StatesModel[K] extends Array<infer U> ? U : never;
 
     return item;
-  }
-
-  // Push an item to a stack (end of an array property).
-  protected pushToStack<K extends keyof StatesModel>(
-    key: K,
-    value: StatesModel[K] extends Array<infer U> ? U : never
-  ): void {
-    this.addItemToEndOfArray(key, value);
-  }
-
-  // Add an item to a queue (start of an array property).
-  protected addItemToQueue<K extends keyof StatesModel>(
-    key: K,
-    value: StatesModel[K] extends Array<infer U> ? U : never
-  ): void {
-    this.addItemToStartOfArray(key, value);
-  }
-
-  // Pop an item from a stack (end of an array property).
-  protected popFromStack<K extends keyof StatesModel>(
-    key: K
-  ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-    if (currentValue?.length > 0) {
-      // Remove the last item from the array and return it.
-      const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];
-      this.removeArrayItemFromEndOfArray(key);
-      return removedItem;
-    }
-    return null;
-  }
-
-  // Remove an item from a queue (start of an array property).
-  protected removeItemFromQueue<K extends keyof StatesModel>(
-    key: K
-  ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-    if (currentValue?.length > 0) {
-      // Remove the last item from the array (queue) and return it.
-      const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];
-      this.removeArrayItemFromEndOfArray(key);
-      return removedItem;
-    }
-    return null;
   }
 }

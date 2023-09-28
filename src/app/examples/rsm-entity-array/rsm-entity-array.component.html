@@ -1,0 +1,112 @@
+<div class="container">
+  <h1>Add Random Numbers To An Array</h1>
+  <button class="btn add" (click)="addItemToStartOfArray()">Add to the start</button>
+  <button class="btn add" (click)="addItemToEndOfArray()">Add to the end</button>
+  <button class="btn add" (click)="addSubArrayToStart()">Add sub array to the start</button>
+  <button class="btn add" (click)="addSubArrayToEnd()">Add sub array to the end</button>
+  <hr>
+  <div>
+    <span>
+      <label class="label-text">
+        <p class="label">Index</p>
+        <input
+         [value]="addingItemIndexNumber"
+         type="number"
+         class="text"
+         name="index"
+         placeholder="Index"
+         tabindex="1"
+         (keyup)="changeAddItemIndexNumber($event)"
+         (change)="changeAddItemIndexNumber($event)"/>
+      </label>
+      <button [disabled]="addingItemIndexNumber < 0" class="btn add" (click)="addItemToArrayAtIndex()">Add Item to the index</button>
+    </span>
+    <br>
+    <span>
+      <label class="label-text">
+        <p class="label">Index</p>
+        <input
+         [value]="addingSubArrayIndexNumber" 
+         type="number" 
+         class="text" 
+         name="index" 
+         placeholder="Index" 
+         tabindex="1" 
+         (keyup)="changeAddSubArrayIndexNumber($event)" 
+         (change)="changeAddSubArrayIndexNumber($event)"/>
+      </label>
+      <button
+       [disabled]="addingSubArrayIndexNumber < 0" 
+       class="btn add" 
+       (click)="addSubArrayAtIndex()">
+        Add sub array to the index
+      </button>
+    </span>
+    <br>
+  </div>
+  <hr>
+  <button class="btn remove" (click)="removeArrayItemFromStartOfArray()">Remove from the start</button>
+  <button class="btn remove" (click)="removeArrayItemFromEndOfArray()">Remove from the end</button>
+  <hr>
+  <div>
+    <span style="display: flex;">
+      <label class="label-text">
+        <p class="label">Index</p>
+        <input 
+         [value]="removingItemsIndexNumber" 
+         type="number" 
+         class="text" 
+         name="index" 
+         placeholder="Index" 
+         tabindex="1" 
+         (keyup)="changeRemoveItemsIndexNumber($event)" 
+         (change)="changeRemoveItemsIndexNumber($event)"/>
+      </label>
+      <label class="label-text">
+        <p class="label">Count</p>
+        <input
+         [value]="removingItemsCountNumber" 
+         type="number" 
+         class="text" 
+         name="count" 
+         placeholder="Count" 
+         tabindex="1" 
+         (keyup)="changeRemoveItemsCountNumber($event)" 
+         (change)="changeRemoveItemsCountNumber($event)"/>
+      </label>
+      <button style="margin-top: 38px;"
+       [disabled]="removingItemsIndexNumber < 0 || removingItemsCountNumber <= 0" 
+       class="btn remove" 
+       (click)="removeArrayItemsFromIndex()">
+        Remove Items from the index
+      </button>
+    </span>
+    <br>
+    <span>
+      <label class="label-text">
+        <input
+         type="text" 
+         class="text" 
+         name="property-name" 
+         placeholder="Property Name"
+         tabindex="1" 
+         (keyup)="changeRemoveItemPropertyName($event)"/>
+      </label>
+      <label class="label-text">
+        <input
+         type="text" 
+         class="text" 
+         name="property-value" 
+         placeholder="Property value" 
+         tabindex="1" 
+         (keyup)="changeRemoveItemPropertyValue($event)"/>
+      </label>
+      <button
+       [disabled]="removingItemPropertyName.length === 0 || !removingItemPropertyValue" 
+       class="btn remove" 
+       (click)="removeArrayItemByPropertyValue()">
+        Remove Item by property value
+      </button>
+    </span>
+  </div>
+</div>

@@ -17,7 +17,7 @@
   display: flex;
   justify-content: center;
 }
-#increment-btn, #decrement-btn, #reset{
+.increment-btn, .decrement-btn, .reset{
   height: 50px;
   width: 120px;
   padding: 0 40px;
@@ -29,10 +29,10 @@
   margin: 20px;
   cursor: pointer;
 }
-#reset{
+.reset{
   font-size: 20px;
 }
-#counter-value{
+.counter-value{
   height: 50px;
   min-width: 120px;
   border-radius: 10px;
