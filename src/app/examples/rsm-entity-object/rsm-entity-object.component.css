@@ -1,14 +1,4 @@
-.array-item {
-  height: 50px;
-  width: 50px;
-  border-radius: 10px;
-  background-color: rgba(255, 0, 0, 0.187);
-  margin-top: 20px;
-  font-size: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .btn {
   height: 40px;
@@ -31,7 +21,7 @@
   border: 2px solid #c21f13;
 }
 
-.get {
+.update {
   background-color: #0a5ab6;
   border: 2px solid #0a5ab6;
 }
@@ -52,6 +42,10 @@ input {
   margin-top: 0.25rem;
   order: 2;
   padding: 0.25rem 0.5rem;
-  width: 8rem;
+  width: 20rem;
   transition: all 0.25s;
+}
+
+.inputs-container {
+  display: block;
 }

@@ -5,21 +5,27 @@ export interface ArrayModel {
 }
 
 export interface ObjectModel {
-  id: number;
   firstName: string;
   lastName: string;
   age: number;
   email: string;
 }
 
+export const initialObject: ObjectModel = {
+  firstName: '',
+  lastName: '',
+  age: 0,
+  email: ''
+}
+
 export interface RsmEntityState {
   primitiveSample: number;
   arraySample: ArrayModel[];
-  objectSample: ObjectModel | undefined;
+  objectSample: ObjectModel;
 }
 
 export const initialRsmEntityState : RsmEntityState = {
   primitiveSample: 0,
   arraySample: [],
-  objectSample: undefined
+  objectSample: initialObject
 }

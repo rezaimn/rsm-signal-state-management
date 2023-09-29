@@ -19,13 +19,13 @@ export class RsmPrimitiveEffectsService{
       switch(action().type) {
         case RsmPrimitiveEnum.DelayedIncrement: {
           setTimeout(() => {
-            this.rsmPrimitiveStoreService.updateStatePropertyByKey('counter', action().payload.value);
+            this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', action().payload.value);
           }, 2000);
           break;
         }
         case RsmPrimitiveEnum.DelayedDecrement: {
           setTimeout(() => {
-            this.rsmPrimitiveStoreService.updateStatePropertyByKey('counter', action().payload.value);
+            this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', action().payload.value);
           }, 2000);
           break;
         }

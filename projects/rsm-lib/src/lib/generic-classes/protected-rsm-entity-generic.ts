@@ -19,6 +19,15 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
     });
   }
 
+  // Update an Object property partially by key and data.
+  public updateExistingObjectPartiallyByPropertyKey<K extends keyof StatesModel>(key: K, data: Partial<StatesModel>[K]) {
+    const objectType = Object.prototype.toString.call(data);
+    const currentValue = this.privateState().state[key];
+    if (objectType === '[object Object]') {
+      this.setStatePropertyByKey(key, { ...currentValue, ...data });
+    }
+  }
+
   // Add an item to the end of an array property.
   protected addItemToEndOfArray<K extends keyof StatesModel>(
     key: K,
@@ -27,7 +36,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
     const currentValue = this.privateState().state[key];
     if (Array.isArray(currentValue)) {
       // Add the item to the end of the array and update the state.
-      this.updateStatePropertyByKey(key, [...currentValue, value] as StatesModel[K]);
+      this.setStatePropertyByKey(key, [...currentValue, value] as StatesModel[K]);
     }
   }
   
@@ -40,7 +49,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
 
     if (Array.isArray(currentValue)) {
       // Add the item to the start of the array and update the state.
-      this.updateStatePropertyByKey(key, [value, ...currentValue] as StatesModel[K]);
+      this.setStatePropertyByKey(key, [value, ...currentValue] as StatesModel[K]);
     }
   }
 
@@ -56,7 +65,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       // Insert the item at the specified index and update the state.
       const newArray = [...currentValue];
       newArray.splice(index, 0, value);
-      this.updateStatePropertyByKey(key, newArray as StatesModel[K]);
+      this.setStatePropertyByKey(key, newArray as StatesModel[K]);
     }
   }
 
@@ -69,7 +78,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
   
     if (Array.isArray(currentValue)) {
       // Add the subarray to the start of the array and update the state.
-      this.updateStatePropertyByKey(key, [...subArray, ...currentValue] as StatesModel[K]);
+      this.setStatePropertyByKey(key, [...subArray, ...currentValue] as StatesModel[K]);
     }
   }
 
@@ -82,7 +91,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
   
     if (Array.isArray(currentValue)) {
       // Add the subarray to the end of the array and update the state.
-      this.updateStatePropertyByKey(key, [...currentValue, ...subArray] as StatesModel[K]);
+      this.setStatePropertyByKey(key, [...currentValue, ...subArray] as StatesModel[K]);
     }
   }
 
@@ -98,7 +107,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       // Insert the subarray at the specified index and update the state.
       const newArray = [...currentValue];
       newArray.splice(index, 0, ...subArray);
-      this.updateStatePropertyByKey(key, newArray as StatesModel[K]);
+      this.setStatePropertyByKey(key, newArray as StatesModel[K]);
     }
   }
 
@@ -110,7 +119,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
 
     if (currentValue?.length > 0) {
       // Remove the first item from the array and update the state.
-      this.updateStatePropertyByKey(key, currentValue.slice(1) as StatesModel[K]);
+      this.setStatePropertyByKey(key, currentValue.slice(1) as StatesModel[K]);
     }
   }
 
@@ -122,7 +131,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
 
     if (currentValue?.length > 0) {
       // Remove the last item from the array and update the state.
-      this.updateStatePropertyByKey(key, currentValue.slice(0, -1) as StatesModel[K]);
+      this.setStatePropertyByKey(key, currentValue.slice(0, -1) as StatesModel[K]);
     }
   }
 
@@ -136,7 +145,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
 
     if (index >= 0 && index < currentValue?.length && index + deleteCount <= currentValue?.length) {
       // Remove items from the array based on the index and count, then update the state.
-      this.updateStatePropertyByKey(key, [
+      this.setStatePropertyByKey(key, [
         ...currentValue.slice(0, index),
         ...currentValue.slice(index + deleteCount),
       ] as StatesModel[K]);
@@ -156,7 +165,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       const updatedArray = currentValue.filter((item: StatesModel[K] extends Array<infer U> ? U : never) => {
         return item[compareKey] != compareValue;
       }) as StatesModel[K];
-      this.updateStatePropertyByKey(statePropertyKey, updatedArray);
+      this.setStatePropertyByKey(statePropertyKey, updatedArray);
     }
   }
 

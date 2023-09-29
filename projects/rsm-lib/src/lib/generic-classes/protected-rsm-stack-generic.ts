@@ -28,7 +28,7 @@ export class ProtectedStackRsmGenericClass<StatesModel extends object> extends P
 
     if (Array.isArray(currentValue)) {
       // Add the item to the start of the array and update the state.
-      this.updateStatePropertyByKey(key, [value, ...currentValue] as StatesModel[K]);
+      this.setStatePropertyByKey(key, [value, ...currentValue] as StatesModel[K]);
     }
   }
 
@@ -40,7 +40,7 @@ export class ProtectedStackRsmGenericClass<StatesModel extends object> extends P
 
     if (Array.isArray(currentValue) && currentValue.length > 0) {
       // Remove the last item from the array and update the state.
-      this.updateStatePropertyByKey(key, currentValue.slice(0, -1) as StatesModel[K]);
+      this.setStatePropertyByKey(key, currentValue.slice(0, -1) as StatesModel[K]);
     }
   }
 
@@ -52,7 +52,7 @@ export class ProtectedStackRsmGenericClass<StatesModel extends object> extends P
     const currentValue = this.privateState().state[key];
     if (Array.isArray(currentValue)) {
       // Add the item to the end of the array and update the state.
-      this.updateStatePropertyByKey(key, [...currentValue, value] as StatesModel[K]);
+      this.setStatePropertyByKey(key, [...currentValue, value] as StatesModel[K]);
     }
   }
 
