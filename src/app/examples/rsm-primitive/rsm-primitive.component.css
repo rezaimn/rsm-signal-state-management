@@ -34,7 +34,7 @@
 }
 .counter-value{
   height: 50px;
-  min-width: 120px;
+  min-width: 200px;
   border-radius: 10px;
   background-color: rgba(255, 0, 0, 0.187);
   margin-top: 20px;

@@ -77,7 +77,7 @@ body {
   background-color: rgba(255, 0, 0, 0.187);
   margin-top: 20px;
   font-size: 30px;
-  display: flex;
+  display: block;
   justify-content: center;
   align-items: center;
   margin-left: 16px;

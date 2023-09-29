@@ -20,9 +20,17 @@
       <h3>Array size : {{arraySize()}}</h3>
       <div class="array">
         <div class="array-item" *ngFor="let item of rsmEntityState().arraySample">
-          <p>{{item.id}}</p>
-          <p>{{item.name}}</p>
+          <p>id: {{item.id}}</p>
+          <p>name: {{item.name}}</p>
         </div>
+      </div>
+    </div>
+    <div *ngIf="currentRoute === '/entity-object'" >
+      <div class="object">
+          <p>First Name: {{rsmEntityState().objectSample['firstName']}}</p>
+          <p>Last Name: {{rsmEntityState().objectSample['lastName']}}</p>
+          <p>Age: {{rsmEntityState().objectSample['age']}}</p>
+          <p>Email: {{rsmEntityState().objectSample['email']}}</p>
       </div>
     </div>
   </div>

@@ -1,59 +1,28 @@
 <div class="container">
-  <h1>Add Random Numbers To An Array</h1>
-  <button class="btn add" (click)="addItemToStartOfArray()">Add to the start</button>
-  <button class="btn add" (click)="addItemToEndOfArray()">Add to the end</button>
-  <button class="btn add" (click)="addSubArrayToStart()">Add sub array to the start</button>
-  <button class="btn add" (click)="addSubArrayToEnd()">Add sub array to the end</button>
-  <hr>
+  <h1>Add and update an object properties</h1>
   <div>
+    <div class="inputs-container">
+      <label class="label-text">
+        <input [value]="userObject.firstName" type="text"  name="firstName" placeholder="First Name" tabindex="1" (keyup)="changeFirstName($event)"/>
+      </label>
+      <br>
+      <label class="label-text">
+        <input [value]="userObject.lastName" type="text" name="lastName" placeholder="Last Name" tabindex="1" (keyup)="changeLastName($event)"/>
+      </label>
+      <br>
+      <label class="label-text">
+        <input [value]="userObject.age" type="number" name="age" placeholder="Age" tabindex="1" (change)="changeAge($event)" (keyup)="changeAge($event)"/>
+      </label>
+      <br>
+      <label class="label-text">
+        <input [value]="userObject.email" type="text" name="email" placeholder="Email" tabindex="1" (keyup)="changeEmail($event)"/>
+      </label>
+      <br>
+    </div>
     <span>
-      <label class="label-text">
-        <input type="number" class="text" name="index" placeholder="Index" tabindex="1" (keyup)="changeAddItemIndexNumber($event)"/>
-      </label>
-      <button [disabled]="addingItemIndexNumber < 0" class="btn add" (click)="addItemToArrayAtIndex()">Add to the index</button>
-    </span>
-    <br>
-    <span>
-      <label class="label-text">
-        <input type="number" class="text" name="index" placeholder="Index" tabindex="1" (keyup)="changeAddSubArrayIndexNumber($event)"/>
-      </label>
-      <button [disabled]="addingSubArrayIndexNumber < 0" class="btn add" (click)="addSubArrayAtIndex()">Add sub array to the index</button>
-    </span>
-    <br>
-  </div>
-  <hr>
-  <button class="btn remove" (click)="removeArrayItemFromStartOfArray()">Remove from the start</button>
-  <button class="btn remove" (click)="removeArrayItemFromEndOfArray()">Remove from the end</button>
-  <hr>
-  <div>
-    <span>
-      <label class="label-text">
-        <input type="number" class="text" name="index" placeholder="Index" tabindex="1" (keyup)="changeRemoveItemsIndexNumber($event)"/>
-      </label>
-      <label class="label-text">
-        <input type="number" class="text" name="count" placeholder="Count" tabindex="1" (keyup)="changeRemoveItemsCountNumber($event)"/>
-      </label>
-      <button [disabled]="removingItemsIndexNumber < 0 || removingItemsCountNumber <= 0" class="btn remove" (click)="removeArrayItemsFromIndex()">Remove Items from the index</button>
-    </span>
-    <br>
-    <span>
-      <label class="label-text">
-        <input type="text" class="text" name="property-name" placeholder="Property name" tabindex="1" (keyup)="changeRemoveItemPropertyName($event)"/>
-      </label>
-      <label class="label-text">
-        <input type="text" class="text" name="property-value" placeholder="Property value" tabindex="1" (keyup)="changeRemoveItemPropertyValue($event)"/>
-      </label>
-      <button [disabled]="!removingItemPropertyName || !removingItemPropertyName" class="btn remove" (click)="removeArrayItemByPropertyValue()">Remove Item by property value</button>
-    </span>
-    <br>
-    <span>
-      <label class="label-text">
-        <input type="text" class="text" name="property-name" placeholder="Property name" tabindex="1" (keyup)="changeGetItemPropertyName($event)"/>
-      </label>
-      <label class="label-text">
-        <input type="text" class="text" name="property-value" placeholder="Property value" tabindex="1" (keyup)="changeGetItemPropertyValue($event)"/>
-      </label>
-      <button [disabled]="!gettingItemPropertyName || !gettingItemsPropertyValue" class="btn get" (click)="getArrayItemByPropertyValue()">Get array item by property value</button>
+      <button  class="btn add" (click)="addNewObject()">Add New Object</button>
+      <button  class="btn update" (click)="updatePartially()">Update Partially</button>
+      <button  class="btn remove" (click)="removeObject()">Remove the Object</button>
     </span>
   </div>
 </div>
