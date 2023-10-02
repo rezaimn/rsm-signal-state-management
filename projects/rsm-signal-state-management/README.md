@@ -215,7 +215,7 @@ resetCounter() {
 
 ### How to listen to the dispatched action and update the states after API call
 
-create an effect service and inject the action service you want to listen to and the state service you wish to update after the API call.
+Create an effect service and inject the action service you want to listen to and the state service you wish to update after the API call.
 In the effect service constructor you need to listen to the actions state change which gives you an Angular signal, you create a function and pass the action to it and use angular signal effect function to detect the action changes. you can have a switch-case to separate the actions and for each action you can call an API or do something async, in the result of the async operation you can update the state you want.
 
 ```typescript
