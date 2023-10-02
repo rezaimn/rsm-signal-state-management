@@ -2,13 +2,14 @@ import { signal, computed, Signal, WritableSignal } from '@angular/core';
 
 // Define a type for the store state with keys to track changes.
 type StoreStateWithKeys<StatesModel> = {
+  // lastUpdatedKeys is an array which keeps last updates state property keys, when user updates a single key or bunch of keys, this array will be updated.
   lastUpdatedKeys: Array<keyof StatesModel> | undefined;
   state: StatesModel;
 };
 
 // Create a class for managing a generic state using Angular signals.
 export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
-  // Private state to hold the data.
+  // Private state to hold the data. This must pe private to prevent user write new value directly into the state properties.
   protected readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
     lastUpdatedKeys: undefined,
     state: {} as StatesModel,
@@ -34,7 +35,7 @@ export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
     return this.privateState().state;
   });
 
-  // Set a single property in the state.
+  // Set a state property in the store. you need to pass the statePropertyKey that shows which state property you wish to update, and the data which is the updating value for that state property
   public setStatePropertyByKey<K extends keyof StatesModel>(statePropertyKey: K, data: StatesModel[K]) {
     const objectType = Object.prototype.toString.call(data);
     this.privateState.update((currentValue) => ({
@@ -44,7 +45,7 @@ export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
     }));
   }
 
-  // Update all properties in the state.
+  // Set all properties in the store. 
   public setAllStateProperties(allStates: StatesModel): void {
     const keys = Object.keys(allStates) as Array<keyof StatesModel>;
     this.privateState.update((currentValue) => ({

@@ -1,7 +1,8 @@
 
 import { Component, inject, Signal } from '@angular/core';
-import { DelayedDecrement, DelayedIncrement, RsmPrimitiveActionsService } from 'src/app/store/actions/rsm-primitive-action.service';
+import { DelayedDecrement, DelayedIncrement } from 'src/app/store/actions/rsm-actions';
 import { RsmPrimitiveEffectsService } from 'src/app/store/effects/rsm-primitive-effect.service';
+import { RsmActionsService } from 'src/app/store/services/rsm-action.service';
 import { RsmPrimitiveStoreService } from 'src/app/store/services/rsm-primitive-store.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { RsmPrimitiveStoreService } from 'src/app/store/services/rsm-primitive-s
 })
 export class RsmPrimitiveComponent {
   rsmPrimitiveStoreService = inject(RsmPrimitiveStoreService);
-  rsmPrimitiveActionsService = inject(RsmPrimitiveActionsService);
+  rsmActionsService = inject(RsmActionsService);
   rsmPrimitiveEffectsService = inject(RsmPrimitiveEffectsService);
   counterCurrentValue: Signal<number> = this.rsmPrimitiveStoreService.select('counter');
   textCurrentValue: Signal<string> = this.rsmPrimitiveStoreService.select('text');
@@ -25,12 +26,11 @@ export class RsmPrimitiveComponent {
   }
 
   delayedIncrement() {
-    this.rsmPrimitiveActionsService.dispatchNewAction(new DelayedIncrement({value: this.counterCurrentValue() + 1}))
+    this.rsmActionsService.dispatchNewAction(new DelayedIncrement({value: this.counterCurrentValue() + 1}))
   }
 
   delayedDecrement() {
-    this.rsmPrimitiveActionsService.dispatchNewAction(new DelayedDecrement({value: this.counterCurrentValue() - 1}))
-
+    this.rsmActionsService.dispatchNewAction(new DelayedDecrement({value: this.counterCurrentValue() - 1}))
   }
 
   resetCounter() {

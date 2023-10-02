@@ -110,7 +110,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
     }
   }
-
+  /*TODO return removed item*/
   // Remove the first item from an array property.
   public removeArrayItemFromStartOfArray<K extends keyof StatesModel>(
     statePropertyKey: K
@@ -122,7 +122,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       this.setStatePropertyByKey(statePropertyKey, currentValue.slice(1) as StatesModel[K]);
     }
   }
-
+  /*TODO return removed item*/
   // Remove the last item from an array property.
   public removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
     statePropertyKey: K
@@ -134,7 +134,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       this.setStatePropertyByKey(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
     }
   }
-
+  /*TODO return removed item*/
   // Remove items from an array property starting at a specific index.
   public removeArrayItemsFromIndex<K extends keyof StatesModel>(
     statePropertyKey: K,
@@ -150,7 +150,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       ] as StatesModel[K]);
     }
   }
-
+  /*TODO return removed item and implement removing all the items with the met conditions*/
   // Remove an item from an array property by its ID.
   public removeArrayItemByPropertyValue<K extends keyof StatesModel>(
     statePropertyKey: K,

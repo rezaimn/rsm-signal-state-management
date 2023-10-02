@@ -1,16 +1,17 @@
 import { Injectable, effect,inject, Signal } from '@angular/core';
 import { RsmPrimitiveStoreService } from '../services/rsm-primitive-store.service';
-import { RsmPrimitiveActionTypes, RsmPrimitiveActionsService, RsmPrimitiveEnum } from '../actions/rsm-primitive-action.service';
+import { RsmPrimitiveActionTypes, RsmPrimitiveEnum } from '../actions/rsm-actions';
+import { RsmActionsService } from '../services/rsm-action.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RsmPrimitiveEffectsService{
   rsmPrimitiveStoreService = inject(RsmPrimitiveStoreService);
-  rsmPrimitiveActionsService = inject(RsmPrimitiveActionsService);
+  rsmActionsService = inject(RsmActionsService);
 
   constructor() {
-    const action = this.rsmPrimitiveActionsService.actionListener();
+    const action = this.rsmActionsService.actionListener();
     this.createEffects(action);
   }
 
