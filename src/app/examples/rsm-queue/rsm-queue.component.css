@@ -1,0 +1,67 @@
+.array-item {
+  height: 50px;
+  width: 50px;
+  border-radius: 10px;
+  background-color: rgba(255, 0, 0, 0.187);
+  margin-top: 20px;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  height: 40px;
+  min-width: 120px;
+  padding: 0 10px;
+  border-radius: 10px;
+  font-size: 16px;
+  color: white;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  background-color: gray;
+  border-color: gray;
+}
+
+.add {
+  background-color: #2e8d46;
+  border: 2px solid #2e8d46;
+}
+
+.remove {
+  background-color: #c21f13;
+  border: 2px solid #c21f13;
+}
+
+.get {
+  background-color: #0a5ab6;
+  border: 2px solid #0a5ab6;
+}
+
+.label-text{
+  border-color: lightgray;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+input {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  height: 2.25rem;
+  line-height: 1.25rem;
+  margin-top: 0.25rem;
+  order: 2;
+  padding: 0.25rem 0.5rem;
+  width: 8rem;
+  transition: all 0.25s;
+}
+
+.label {
+  margin: 0!important;
+  width: 180px;
+}

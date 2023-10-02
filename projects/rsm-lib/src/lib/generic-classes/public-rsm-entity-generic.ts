@@ -1,8 +1,8 @@
 import { computed, Signal } from '@angular/core';
-import { PublicPrimitiveRsmGenericClass } from './public-rsm-primitive-generic';
+import { PublicRsmPrimitiveGenericClass } from './public-rsm-primitive-generic';
 
 // Extend the base class to manage generic state.
-export class PublicEntityRsmGenericClass<StatesModel extends object> extends PublicPrimitiveRsmGenericClass<StatesModel> {
+export class PublicRsmEntityGenericClass<StatesModel extends object> extends PublicRsmPrimitiveGenericClass<StatesModel> {
   
   constructor(initialValues: StatesModel) {
     super(initialValues); // Initialize the state with initial values
@@ -10,141 +10,141 @@ export class PublicEntityRsmGenericClass<StatesModel extends object> extends Pub
 
   // Get the size of an array property in the state.
   public getArraySize<K extends keyof StatesModel>(
-    key: StatesModel[K] extends Array<infer U> ?  K : never
+    statePropertyKey: StatesModel[K] extends Array<infer U> ?  K : never
   ): Signal<number> {
     return computed(() => {
       // Retrieve the array and return its length.
-      const array = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+      const array = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
       return array.length;
     });
   }
 
   // Update an Object property partially by key and data.
-  public updateExistingObjectPartiallyByPropertyKey<K extends keyof StatesModel>(key: K, data: Partial<StatesModel>[K]) {
+  public updateExistingObjectPartiallyByPropertyKey<K extends keyof StatesModel>(statePropertyKey: K, data: Partial<StatesModel>[K]) {
     const objectType = Object.prototype.toString.call(data);
-    const currentValue = this.privateState().state[key];
+    const currentValue = this.privateState().state[statePropertyKey];
     if (objectType === '[object Object]') {
-      this.setStatePropertyByKey(key, { ...currentValue, ...data });
+      this.setStatePropertyByKey(statePropertyKey, { ...currentValue, ...data });
     }
   }
 
   // Add an item to the end of an array property.
   public addItemToEndOfArray<K extends keyof StatesModel>(
-    key: K,
-    value: StatesModel[K] extends Array<infer U> ? U : never
+    statePropertyKey: K,
+    item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[key];
+    const currentValue = this.privateState().state[statePropertyKey];
     if (Array.isArray(currentValue)) {
       // Add the item to the end of the array and update the state.
-      this.setStatePropertyByKey(key, [...currentValue, value] as StatesModel[K]);
+      this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
     }
   }
   
   // Add an item to the start of an array property.
   public addItemToStartOfArray<K extends keyof StatesModel>(
-    key: K,
-    value: StatesModel[K] extends Array<infer U> ? U : never
+    statePropertyKey: K,
+    item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[key];
+    const currentValue = this.privateState().state[statePropertyKey];
 
     if (Array.isArray(currentValue)) {
       // Add the item to the start of the array and update the state.
-      this.setStatePropertyByKey(key, [value, ...currentValue] as StatesModel[K]);
+      this.setStatePropertyByKey(statePropertyKey, [item, ...currentValue] as StatesModel[K]);
     }
   }
 
   // Add an item to an array property at a specific index.
   public addItemToArrayAtIndex<K extends keyof StatesModel>(
-    key: K,
+    statePropertyKey: K,
     index: number,
-    value: StatesModel[K] extends Array<infer U> ? U : never
+    item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     console.log(currentValue?.length, index)
     if (index >= 0 && index <= currentValue?.length) {
       // Insert the item at the specified index and update the state.
       const newArray = [...currentValue];
-      newArray.splice(index, 0, value);
-      this.setStatePropertyByKey(key, newArray as StatesModel[K]);
+      newArray.splice(index, 0, item);
+      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
     }
   }
 
   // Add a subarray to the start of an array property.
   public addSubArrayToStart<K extends keyof StatesModel>(
-    key: K,
+    statePropertyKey: K,
     subArray: Array<StatesModel[K] extends Array<infer U> ? U : never>
   ): void {
-    const currentValue = this.privateState().state[key];
+    const currentValue = this.privateState().state[statePropertyKey];
   
     if (Array.isArray(currentValue)) {
       // Concatenate the subarray to the start of the array and update the state.
-      this.setStatePropertyByKey(key, [...subArray, ...currentValue] as StatesModel[K]);
+      this.setStatePropertyByKey(statePropertyKey, [...subArray, ...currentValue] as StatesModel[K]);
     }
   }
 
   // Add a subarray to the end of an array property.
   public addSubArrayToEnd<K extends keyof StatesModel>(
-    key: K,
+    statePropertyKey: K,
     subArray: Array<StatesModel[K] extends Array<infer U> ? U : never>
   ): void {
-    const currentValue = this.privateState().state[key];
+    const currentValue = this.privateState().state[statePropertyKey];
   
     if (Array.isArray(currentValue)) {
       // Concatenate the subarray to the end of the array and update the state.
-      this.setStatePropertyByKey(key, [...currentValue, ...subArray] as StatesModel[K]);
+      this.setStatePropertyByKey(statePropertyKey, [...currentValue, ...subArray] as StatesModel[K]);
     }
   }
 
   // Add a subarray to an array property at a specific index.
   public addSubArrayAtIndex<K extends keyof StatesModel>(
-    key: K,
+    statePropertyKey: K,
     index: number,
     subArray: Array<StatesModel[K] extends Array<infer U> ? U : never>
   ): void {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (index >= 0 && index <= currentValue?.length) {
       // Insert the subarray at the specified index and update the state.
       const newArray = [...currentValue];
       newArray.splice(index, 0, ...subArray);
-      this.setStatePropertyByKey(key, newArray as StatesModel[K]);
+      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
     }
   }
 
   // Remove the first item from an array property.
   public removeArrayItemFromStartOfArray<K extends keyof StatesModel>(
-    key: K
+    statePropertyKey: K
   ): void {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (currentValue?.length > 0) {
       // Remove the first item and update the state.
-      this.setStatePropertyByKey(key, currentValue.slice(1) as StatesModel[K]);
+      this.setStatePropertyByKey(statePropertyKey, currentValue.slice(1) as StatesModel[K]);
     }
   }
 
   // Remove the last item from an array property.
   public removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
-    key: K
+    statePropertyKey: K
   ): void {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (currentValue?.length > 0) {
       // Remove the last item and update the state.
-      this.setStatePropertyByKey(key, currentValue.slice(0, -1) as StatesModel[K]);
+      this.setStatePropertyByKey(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
     }
   }
 
   // Remove items from an array property starting at a specific index.
   public removeArrayItemsFromIndex<K extends keyof StatesModel>(
-    key: K,
+    statePropertyKey: K,
     index: number,
     deleteCount: number
   ): void {
-    const currentValue = this.privateState().state[key] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     if (index >= 0 && index < currentValue?.length && index + deleteCount <= currentValue?.length) {
       // Remove items from the specified index and update the state.
-      this.setStatePropertyByKey(key, [
+      this.setStatePropertyByKey(statePropertyKey, [
         ...currentValue.slice(0, index),
         ...currentValue.slice(index + deleteCount),
       ] as StatesModel[K]);
@@ -154,15 +154,15 @@ export class PublicEntityRsmGenericClass<StatesModel extends object> extends Pub
   // Remove an item from an array property by its ID.
   public removeArrayItemByPropertyValue<K extends keyof StatesModel>(
     statePropertyKey: K,
-    removeKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
-    itemId: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
+    removePropertyKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
+    removePropertyValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
   ): void {
     const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (Array.isArray(currentValue)) {
       // Filter out the item with the matching ID and update the state.
       const updatedArray = currentValue.filter((item: StatesModel[K] extends Array<infer U> ? U : never) => {
-        return item[removeKey] != itemId;
+        return item[removePropertyKey] != removePropertyValue;
       }) as StatesModel[K];
       this.setStatePropertyByKey(statePropertyKey, updatedArray);
     }

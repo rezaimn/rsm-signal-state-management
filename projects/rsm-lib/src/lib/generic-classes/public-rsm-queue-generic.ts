@@ -1,8 +1,8 @@
 import { Signal, computed } from '@angular/core';
-import { ProtectedRsmPrimitiveGenericClass } from './protected-rsm-primitive-generic';
+import { PublicRsmPrimitiveGenericClass } from './public-rsm-primitive-generic';
 
 // Extend the base class for managing a queue.
-export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends ProtectedRsmPrimitiveGenericClass<StatesModel> {
+export class PublicRsmQueueGenericClass<StatesModel extends object> extends PublicRsmPrimitiveGenericClass<StatesModel> {
   
   constructor(initialValues: StatesModel) {
     super(initialValues); // Initialize the state with initial values
@@ -45,7 +45,7 @@ export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends P
   }
 
   // Add an item to the start of the queue.
-  protected addItemToQueue<K extends keyof StatesModel>(
+  public addItemToQueue<K extends keyof StatesModel>(
     statePropertyKey: K,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
@@ -53,7 +53,7 @@ export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends P
   }
 
   // Remove an item from the start of the queue.
-  protected removeItemFromQueue<K extends keyof StatesModel>(
+  public removeItemFromQueue<K extends keyof StatesModel>(
     statePropertyKey: K
   ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
     const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
@@ -66,20 +66,39 @@ export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends P
     return null;
   }
 
-  // Add an item to the queue at a specific index (insertion).
-  protected addItemToPriorityQueue<K extends keyof StatesModel>(
+  private addItemToStartOfQueue<K extends keyof StatesModel>(
     statePropertyKey: K,
-    priorityKey: keyof StatesModel[K],
+    item: StatesModel[K] extends Array<infer U> ? U : never
+  ): void {
+    const currentValue = this.privateState().state[statePropertyKey];
+    if (Array.isArray(currentValue)) {
+      this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
+    }
+  }
+  // Add an item to the queue at a specific index (insertion).
+  public addItemToPriorityQueueByPriorityKey<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    priorityKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
+    priorityOrder: 'smaller-higher' | 'bigger-higher',
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
     const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    // if (index >= 0 && index <= currentValue?.length) {
-    //   // Insert the item at the specified index and update the state.
-    //   const newArray = [...currentValue];
-    //   newArray.splice(index, 0, value);
-    //   this.setStatePropertyByKey(key, newArray as StatesModel[K]);
-    // }
+    if (Array.isArray(currentValue)) {
+      const insertionIndex = currentValue.findIndex(((queueItem: any) => {
+        if (item) {
+          return priorityOrder === 'smaller-higher' ? item[priorityKey] >= queueItem[priorityKey] : item[priorityKey] <= queueItem[priorityKey];
+        }
+        return -1;
+      }));
+      if (insertionIndex >= 0) {
+        // Insert the item at the specified index and update the state.
+        const newArray = [...currentValue];
+        newArray.splice(insertionIndex, 0, item);
+        this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+      } else {
+        this.addItemToStartOfQueue(statePropertyKey, item);
+      }
+    }
   }
 
 }

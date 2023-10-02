@@ -7,7 +7,7 @@ type StoreStateWithKeys<StatesModel> = {
 };
 
 // Create a class for managing a generic state using Angular signals.
-export class PublicPrimitiveRsmGenericClass<StatesModel extends object> {
+export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
   // Private state to hold the data.
   protected readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
     lastUpdatedKeys: undefined,
@@ -25,8 +25,8 @@ export class PublicPrimitiveRsmGenericClass<StatesModel extends object> {
   }
 
   // Select a specific property from the state.
-  public select<K extends keyof StatesModel>(key: K): Signal<StatesModel[K]> {
-    return computed(() => this.privateState().state[key]);
+  public select<K extends keyof StatesModel>(statePropertyKey: K): Signal<StatesModel[K]> {
+    return computed(() => this.privateState().state[statePropertyKey]);
   }
 
   // Expose a readonly state properties.
@@ -35,12 +35,12 @@ export class PublicPrimitiveRsmGenericClass<StatesModel extends object> {
   });
 
   // Set a single property in the state.
-  public setStatePropertyByKey<K extends keyof StatesModel>(key: K, data: StatesModel[K]) {
+  public setStatePropertyByKey<K extends keyof StatesModel>(statePropertyKey: K, data: StatesModel[K]) {
     const objectType = Object.prototype.toString.call(data);
     this.privateState.update((currentValue) => ({
       ...currentValue,
-      lastUpdatedKeys: [key],
-      state: { ...currentValue.state, [key]: objectType === '[object Object]'? { ...data }: data  },
+      lastUpdatedKeys: [statePropertyKey],
+      state: { ...currentValue.state, [statePropertyKey]: objectType === '[object Object]'? { ...data }: data  },
     }));
   }
 
