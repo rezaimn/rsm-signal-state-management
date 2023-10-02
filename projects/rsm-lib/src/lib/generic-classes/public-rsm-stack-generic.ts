@@ -2,7 +2,7 @@ import { Signal, computed } from '@angular/core';
 import { PublicRsmPrimitiveGenericClass } from './public-rsm-primitive-generic';
 
 // Extend the base class for managing a stack.
-export class PublicStackRsmGenericClass<StatesModel extends object> extends PublicRsmPrimitiveGenericClass<StatesModel> {
+export class PublicRsmStackGenericClass<StatesModel extends object> extends PublicRsmPrimitiveGenericClass<StatesModel> {
   
   constructor(initialValues: StatesModel) {
     super(initialValues); // Initialize the state with initial values

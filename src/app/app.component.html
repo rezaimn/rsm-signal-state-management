@@ -50,5 +50,13 @@
         </div>
       </div>
     </div>
+    <div *ngIf="currentRoute === '/stack'" >
+      <div>
+        <div class="array-item" *ngFor="let item of rsmStackState().stack">
+          <p>id: {{item.id}}</p>
+          <p>name: {{item.name}}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
