@@ -94,23 +94,23 @@
         }
       }
     },
-    "rsm-lib": {
+    "rsm-signal-state-management": {
       "projectType": "library",
-      "root": "projects/rsm-lib",
-      "sourceRoot": "projects/rsm-lib/src",
+      "root": "projects/rsm-signal-state-management",
+      "sourceRoot": "projects/rsm-signal-state-management/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/rsm-lib/ng-package.json"
+            "project": "projects/rsm-signal-state-management/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/rsm-lib/tsconfig.lib.prod.json"
+              "tsConfig": "projects/rsm-signal-state-management/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/rsm-lib/tsconfig.lib.json"
+              "tsConfig": "projects/rsm-signal-state-management/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -118,7 +118,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/rsm-lib/tsconfig.spec.json",
+            "tsConfig": "projects/rsm-signal-state-management/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

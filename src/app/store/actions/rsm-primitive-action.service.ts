@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, PublicActionsRsmGeneric } from 'projects/rsm-lib/src/lib/generic-classes/rsm-actions-generic';
+import { Action, PublicActionsRsmGeneric } from 'projects/rsm-signal-state-management/src/lib/generic-classes/rsm-actions-generic';
 
 export enum RsmPrimitiveEnum {
   DelayedIncrement = '[Counter] DelayedIncrement',

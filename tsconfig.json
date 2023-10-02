@@ -17,8 +17,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "paths": {
-      "rsm-lib": [
-        "dist/rsm-lib"
+      "rsm-signal-state-management": [
+        "dist/rsm-signal-state-management"
       ]
     },
     "target": "ES2022",
