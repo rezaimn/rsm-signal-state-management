@@ -1,7 +1,7 @@
 
 import { Component, inject } from '@angular/core';
-import { SimpleQueueModel } from 'src/app/store/models/rsm-queue.model';
-import { RsmQueueStoreService } from 'src/app/store/services/rsm-queue-store';
+import { PriorityQueueModel, SimpleQueueModel } from 'src/app/store/models/rsm-queue.model';
+import { RsmQueueStoreService } from 'src/app/store/services/rsm-queue-store.service';
 import { generateRandomObject, generateRandomPriorityObject } from 'src/app/utils/random-object-generator';
 
 @Component({
@@ -12,13 +12,15 @@ import { generateRandomObject, generateRandomPriorityObject } from 'src/app/util
 export class RsmQueueComponent {
   rsmQueueStoreService = inject(RsmQueueStoreService);
  
+  selectedSimpleQueueItem: SimpleQueueModel | null = null;
+  selectedPriorityQueueItem: PriorityQueueModel | null = null;
 
   addItemToTheQueue() {
     this.rsmQueueStoreService.addItemToQueue('simpleQueue', generateRandomObject());
   }
 
   removeItemFromQueue() {
-    this.rsmQueueStoreService.removeItemFromQueue('simpleQueue');
+    this.selectedSimpleQueueItem = this.rsmQueueStoreService.removeItemFromQueue('simpleQueue');
   }
 
   addItemToThePriorityQueue() {
@@ -26,6 +28,6 @@ export class RsmQueueComponent {
   }
 
   removeItemFromPriorityQueue() {
-    this.rsmQueueStoreService.removeItemFromQueue('priorityQueue');
+    this.selectedPriorityQueueItem = this.rsmQueueStoreService.removeItemFromQueue('priorityQueue');
   }
 }

@@ -65,3 +65,15 @@ input {
   margin: 0!important;
   width: 180px;
 }
+
+.selected-queue-item {
+  display: flex;
+}
+
+.simple-queue {
+  width: 50%;
+}
+
+.priority-queue {
+  width: 50%;
+}

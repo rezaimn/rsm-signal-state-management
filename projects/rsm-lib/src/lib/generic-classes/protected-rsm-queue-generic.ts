@@ -66,20 +66,40 @@ export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends P
     return null;
   }
 
-  // Add an item to the queue at a specific index (insertion).
-  protected addItemToPriorityQueue<K extends keyof StatesModel>(
+  private addItemToStartOfQueue<K extends keyof StatesModel>(
     statePropertyKey: K,
-    priorityKey: keyof StatesModel[K],
+    item: StatesModel[K] extends Array<infer U> ? U : never
+  ): void {
+    const currentValue = this.privateState().state[statePropertyKey];
+    if (Array.isArray(currentValue)) {
+      this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
+    }
+  }
+
+  // Add an item to the queue at a specific index (insertion).
+  protected addItemToPriorityQueueByPriorityKey<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    priorityKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
+    priorityOrder: 'smaller-higher' | 'bigger-higher',
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
     const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    // if (index >= 0 && index <= currentValue?.length) {
-    //   // Insert the item at the specified index and update the state.
-    //   const newArray = [...currentValue];
-    //   newArray.splice(index, 0, value);
-    //   this.setStatePropertyByKey(key, newArray as StatesModel[K]);
-    // }
+    if (Array.isArray(currentValue)) {
+      const insertionIndex = currentValue.findIndex(((queueItem: any) => {
+        if (item) {
+          return priorityOrder === 'smaller-higher' ? item[priorityKey] >= queueItem[priorityKey] : item[priorityKey] <= queueItem[priorityKey];
+        }
+        return -1;
+      }));
+      if (insertionIndex >= 0) {
+        // Insert the item at the specified index and update the state.
+        const newArray = [...currentValue];
+        newArray.splice(insertionIndex, 0, item);
+        this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+      } else {
+        this.addItemToStartOfQueue(statePropertyKey, item);
+      }
+    }
   }
 
 }

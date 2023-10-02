@@ -1,0 +1,13 @@
+<div class="container">
+  <h1>Add Random Numbers To An Array</h1>
+  <button class="btn add" (click)="pushItemToTheStack()">Push to the Stack</button>
+  <button class="btn remove" (click)="popItemFromStack()">Pop from the Stack</button>
+</div>
+
+<hr>
+
+<div *ngIf="poppedItem">
+  Popped Item is 
+  <p>Id: {{poppedItem.id}}</p>
+  <p>Name: {{poppedItem.name}}</p>
+</div>

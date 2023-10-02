@@ -75,6 +75,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
       this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
     }
   }
+  
   // Add an item to the queue at a specific index (insertion).
   public addItemToPriorityQueueByPriorityKey<K extends keyof StatesModel>(
     statePropertyKey: K,
