@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { RsmPrimitiveState, initialRsmPrimitiveState } from '../models/rsm-primitive.model';
-import { PublicPrimitiveRsmGenericClass } from 'projects/rsm-lib/src/lib/generic-classes';
+import { PublicRsmPrimitiveGenericClass } from 'projects/rsm-lib/src/lib/generic-classes/public-rsm-primitive-generic';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RsmPrimitiveStoreService extends PublicPrimitiveRsmGenericClass<RsmPrimitiveState>{
+export class RsmPrimitiveStoreService extends PublicRsmPrimitiveGenericClass<RsmPrimitiveState>{
   constructor() { 
     super(initialRsmPrimitiveState);
   }

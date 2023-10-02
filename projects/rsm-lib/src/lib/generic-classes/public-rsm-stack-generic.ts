@@ -1,8 +1,8 @@
 import { Signal, computed } from '@angular/core';
-import { ProtectedRsmPrimitiveGenericClass } from './protected-rsm-primitive-generic';
+import { PublicRsmPrimitiveGenericClass } from './public-rsm-primitive-generic';
 
 // Extend the base class for managing a stack.
-export class ProtectedRsmStackGenericClass<StatesModel extends object> extends ProtectedRsmPrimitiveGenericClass<StatesModel> {
+export class PublicStackRsmGenericClass<StatesModel extends object> extends PublicRsmPrimitiveGenericClass<StatesModel> {
   
   constructor(initialValues: StatesModel) {
     super(initialValues); // Initialize the state with initial values
@@ -32,7 +32,7 @@ export class ProtectedRsmStackGenericClass<StatesModel extends object> extends P
   }
 
   // Push an item onto an array property (push onto the stack).
-  protected pushItemToStack<K extends keyof StatesModel>(
+  public pushItemToStack<K extends keyof StatesModel>(
     statePropertyKey: K,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
@@ -44,7 +44,7 @@ export class ProtectedRsmStackGenericClass<StatesModel extends object> extends P
   }
 
   // Pop an item from the end of an array property (pop from the stack).
-  protected popFromStack<K extends keyof StatesModel>(
+  public popFromStack<K extends keyof StatesModel>(
     statePropertyKey: K
   ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
     const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;

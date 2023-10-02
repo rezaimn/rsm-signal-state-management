@@ -33,5 +33,22 @@
           <p>Email: {{rsmEntityState().objectSample['email']}}</p>
       </div>
     </div>
+    <div *ngIf="currentRoute === '/queue'" class="queue">
+      <div class="normal-queue">
+        <h3>Normal Queue</h3>
+        <div class="array-item" *ngFor="let item of rsmQueueState().simpleQueue">
+          <p>id: {{item.id}}</p>
+          <p>name: {{item.name}}</p>
+        </div>
+      </div>
+      <div class="priority-queue">
+        <h3>Priority Queue</h3>
+        <div class="priority-item" *ngFor="let item of rsmQueueState().priorityQueue">
+          <p>id: {{item.id}}</p>
+          <p>name: {{item.name}}</p>
+          <p>priority: {{item.priority}}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

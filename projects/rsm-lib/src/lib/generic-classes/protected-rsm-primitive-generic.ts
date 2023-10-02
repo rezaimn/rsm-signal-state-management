@@ -30,27 +30,27 @@ export class ProtectedRsmPrimitiveGenericClass<StatesModel extends object> {
   }
 
   // Select a specific property from the state.
-  public select<K extends keyof StatesModel>(key: K): Signal<StatesModel[K]> {
-    return computed(() => this.privateState().state[key]);
+  public select<K extends keyof StatesModel>(statePropertyKey: K): Signal<StatesModel[K]> {
+    return computed(() => this.privateState().state[statePropertyKey]);
   }
 
   // Set a single state property by key and data.
-  protected setStatePropertyByKey<K extends keyof StatesModel>(key: K, data: StatesModel[K]) {
+  protected setStatePropertyByKey<K extends keyof StatesModel>(statePropertyKey: K, data: StatesModel[K]) {
     const objectType = Object.prototype.toString.call(data);
     this.privateState.update((currentValue) => ({
       ...currentValue,
-      lastUpdatedKeys: [key],
-      state: { ...currentValue.state, [key]: objectType === '[object Object]'? { ...data }: data  },
+      lastUpdatedKeys: [statePropertyKey],
+      state: { ...currentValue.state, [statePropertyKey]: objectType === '[object Object]'? { ...data }: data  },
     }));
   }
 
   // Set all state properties from an object with new values.
-  public setAllStateProperties(allStates: StatesModel): void {
-    const keys = Object.keys(allStates) as Array<keyof StatesModel>;
+  public setAllStateProperties(allStatesData: StatesModel): void {
+    const keys = Object.keys(allStatesData) as Array<keyof StatesModel>;
     this.privateState.update((currentValue) => ({
       ...currentValue,
       lastUpdatedKeys: keys,
-      state: { ...allStates },
+      state: { ...allStatesData },
     }));
   }
 }

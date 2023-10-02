@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { PublicEntityRsmGenericClass } from 'projects/rsm-lib/src/lib/generic-classes';
 import { RsmEntityState, initialRsmEntityState } from '../models/rsm-entity.model';
+import { PublicRsmEntityGenericClass } from 'projects/rsm-lib/src/lib/generic-classes/public-rsm-entity-generic';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RsmEntityStoreService extends PublicEntityRsmGenericClass<RsmEntityState>{
+export class RsmEntityStoreService extends PublicRsmEntityGenericClass<RsmEntityState>{
   constructor() { 
     super(initialRsmEntityState);
   }

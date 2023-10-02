@@ -5,6 +5,8 @@ import { RsmPrimitiveStoreService } from './store/services/rsm-primitive-store.s
 import { RsmPrimitiveState } from './store/models/rsm-primitive.model';
 import { ArrayModel, RsmEntityState } from './store/models/rsm-entity.model';
 import { RsmEntityStoreService } from './store/services/rsm-entity-store.service';
+import { RsmQueueState } from './store/models/rsm-queue.model';
+import { RsmQueueStoreService } from './store/services/rsm-queue-store';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +17,11 @@ export class AppComponent implements OnInit {
   router = inject(Router);
   rsmPrimitiveStoreService = inject(RsmPrimitiveStoreService);
   rsmEntityStoreService = inject(RsmEntityStoreService);
+  rsmQueueStoreService = inject(RsmQueueStoreService);
   currentRoute = '';
   rsmPrimitiveState: Signal<RsmPrimitiveState> = this.rsmPrimitiveStoreService.state;
   rsmEntityState: Signal<RsmEntityState> = this.rsmEntityStoreService.state;
+  rsmQueueState: Signal<RsmQueueState> = this.rsmQueueStoreService.state;
   arraySize: Signal<number> = this.rsmEntityStoreService.getArraySize('arraySample');
   
   ngOnInit() {
