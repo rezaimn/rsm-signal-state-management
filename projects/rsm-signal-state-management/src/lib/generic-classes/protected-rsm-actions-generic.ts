@@ -10,7 +10,7 @@ type ActionsStore<ActionTypes> = {
   action: ActionTypes;
 };
 
-export class PublicActionsRsmGeneric <ActionTypes extends Action> {
+export class ProtectedRsmActionsGeneric <ActionTypes extends Action> {
   // Private state to hold the data.
   protected readonly privateState: WritableSignal<ActionsStore<ActionTypes>> = signal({
     action: {
@@ -24,18 +24,16 @@ export class PublicActionsRsmGeneric <ActionTypes extends Action> {
     return this.privateState();
   });
 
-  
+  // Returns a signal with the action type 
   public actionListener(): Signal<ActionTypes>  {
     return computed(() => this.privateState().action);
   }
 
   // Dispatch a new action.
-  public dispatchNewAction<T extends ActionTypes>(action: T) {
+  protected dispatchNewAction<T extends ActionTypes>(action: T) {
     this.privateState.update((currentValue) => ({
       ...currentValue,
       action
     }));
   }
-
-  
 }
