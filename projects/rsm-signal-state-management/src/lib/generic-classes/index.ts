@@ -7,4 +7,5 @@ export { ProtectedRsmStackGenericClass } from './protected-rsm-stack-generic';
 export { PublicRsmStackGenericClass } from './public-rsm-stack-generic';
 export { PublicRsmEntityGenericClass } from './public-rsm-entity-generic';
 export { ProtectedRsmPrimitiveGenericClass } from './protected-rsm-primitive-generic';
-export * from './rsm-actions-generic';
+export * from './public-rsm-actions-generic';
+export { ProtectedRsmActionsGeneric } from './protected-rsm-actions-generic';

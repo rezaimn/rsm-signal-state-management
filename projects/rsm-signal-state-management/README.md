@@ -10,8 +10,6 @@ Brief description or tagline for your library.
 - [Introduction](#introduction)
 - [Usage](#usage)
 - [API Documentation](#api-documentation)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
@@ -28,22 +26,38 @@ Also you have a product entity with some states like, info, availability.
 
 ```typescript
 interface UserState {
-  profile: UserProfile;
-  balance: UserBalance;
-  personalSettings: UserPersonalSettings;
+  profile: UserProfile | undefined;
+  balance: UserBalance |undefined;
+  personalSettings: UserPersonalSettings | undefined;
 }
 
 interface ProductState {
-  info: ProductInfo;
-  availability: ProductAvailability;
+  info: ProductInfo | undefined;
+  availability: ProductAvailability | undefined;
+}
+
+const initialUserState: UserState {
+  profile: undefined,
+  balance: undefined,
+  personalSettings: undefined
+}
+
+const initialProductState: ProductState {
+  info: undefined,
+  availability: undefined,
 }
 ```
 With this library you can either have separated state managements for user and product like up, or have a main state to hold them all together in one place like this:
 
 ```typescript
 interface MainState {
-  user: UserState;
-  product: ProductState
+  user: UserState | undefined;
+  product: ProductState | undefined;
+}
+
+const initialMainState: MainState {
+  user: undefined,
+  product: undefined,
 }
 ```
 For the separated states you will gonna need to create separated services for each state and I personally prefer this method to encapsulate your entities states.
@@ -66,12 +80,13 @@ export class UserStoreService extends PublicRsmEntityGenericClass<UserState>{
 ```
 You also gonna need a service which extends one of the following classes from the library regarding what kind of state we need to create.
 
-1- public-rsm-primitive-generic ( for simple primitive values ).
-2- public-rsm-entity-generic ( for arrays and objects and also the primitive states ) for our user case we need this one.
-3- public-rsm-queue-generic ( to create a simple queue or priority queue, you can easily add or remove Items here).
-4- public-rsm-stack-generic ( to create a stack, you can easily push and pop Items here).
-5- public-rsm-action-generic ( to dispatch and listen to actions ).
+1- PublicRsmPrimitiveGenericClass ( for simple primitive values ).
+2- PublicRsmEntityGenericClass ( for arrays and objects and also the primitive states ) for our user case we need this one.
+3- PublicRsmQueueGenericClass ( to create a simple queue or priority queue, you can easily add or remove Items here).
+4- PublicRsmStackGenericClass ( to create a stack, you can easily push and pop Items here).
+5- PublicActionsRsmGeneric ( to dispatch and listen to actions ).
 
+All the mentioned classes have a protected version also, if you use the protected ones you can't have access to the functions and properties directly through the service is extending these classes and you will gonna need some public middleware functions to use the protected functions and properties.
 ### Use the store service 
 
 ```typescript
@@ -98,14 +113,16 @@ To use this library, you'll need to create a service that extends one of the gen
 Here's an example of defining a state model and providing an initialization value for a simple state management system with two properties:
 
 ```typescript
-export interface RsmPrimitiveState {
-  counter: number;
-  text: string;
+export interface UserDetailsState {
+  username: string;
+  userIsLoggedIn: boolean;
+  userAge: number;
 }
 
-export const initialRsmPrimitiveState: RsmPrimitiveState = {
-  counter: 0,
-  text: '',
+export const initialUserDetailsState: UserDetailsState = {
+  username: '',
+  userIsLoggedIn: true,
+  userAge: 0
 };
 ```
 ### Create a Service
@@ -118,9 +135,9 @@ import { PublicRsmPrimitiveGenericClass } from 'rsm-signal-state-management/src/
 @Injectable({
   providedIn: 'root'
 })
-export class RsmPrimitiveStoreService extends PublicRsmPrimitiveGenericClass<RsmPrimitiveState> {
+export class UserDetailsStoreService extends PublicRsmPrimitiveGenericClass<UserDetailsState> {
   constructor() { 
-    super(initialRsmPrimitiveState);
+    super(initialUserDetailsState);
   }
 }
 ```
@@ -131,20 +148,20 @@ Here's an example of how to interact with the service:
 
 ```typescript
 // Import the service
-const rsmPrimitiveStoreService = inject(RsmPrimitiveStoreService);
+const userDetailsStoreService = inject(UserDetailsStoreService);
 
-// Example of incrementing the 'counter' property
+// Example of set the 'username' property
 increment() {
-  rsmPrimitiveStoreService.setStatePropertyByKey('counter', this.counterCurrentValue() + 1);
+  userDetailsStoreService.setStatePropertyByKey('username', 'Test Username');
 }
 
-// Example of decrementing the 'counter' property
+// Example of set the 'userIsLoggedIn' property
 decrement() {
-  rsmPrimitiveStoreService.setStatePropertyByKey('counter', this.counterCurrentValue() - 1);
+  userDetailsStoreService.setStatePropertyByKey('userIsLoggedIn', true);
 }
 
 // Access the state
-const rsmPrimitiveState: Signal<RsmPrimitiveState> = rsmPrimitiveStoreService.state;
+const userDetailState: Signal<UserDetailsState> = userDetailsStoreService.state;
 
 ```
 By following these steps, you can effectively manage and interact with the state using this service.
@@ -157,22 +174,22 @@ If you wish to create an action that can trigger an effect, which makes an API c
 import { Action } from 'projects/rsm-signal-state-management/src/lib/generic-classes/rsm-actions-generic';
 
 //Create an enum for having unique action names
-export enum RsmPrimitiveEnum {
-  DelayedIncrement = '[Counter] DelayedIncrement',
-  DelayedDecrement = '[Counter] DelayedDecrement'
+export enum UserDetailsEnum {
+  Login = '[User] Login',
+  Logout = '[User] Logout'
 }
 // Create classes which implements Action interface from action generic class
-export class DelayedIncrement implements Action {
-  readonly type = RsmPrimitiveEnum.DelayedIncrement;
-  constructor(public payload: { value: number }) {}
+export class UserLogin implements Action {
+  readonly type = UserDetailsEnum.Login;
+  constructor(public payload: { username: string, password: string }) {}
 }
 
-export class DelayedDecrement implements Action {
-  readonly type = RsmPrimitiveEnum.DelayedDecrement;
-  constructor(public payload: { value: number }) {}
+export class UserLogout implements Action {
+  readonly type = UserDetailsEnum.Logout;
+  constructor() {}
 }
 // Create an action type which includes all the action class types
-export type RsmPrimitiveActionTypes = DelayedIncrement | DelayedDecrement;
+export type UserActionTypes = UserLogin | UserLogout;
 
 ```
 
@@ -182,13 +199,13 @@ This service extends the action generic class from the library and gets an Actio
 
 ```typescript
 import { Injectable } from "@angular/core";
-import { PublicActionsRsmGeneric } from "projects/rsm-signal-state-management/src/lib/generic-classes";
-import { RsmPrimitiveActionTypes } from "../actions/rsm-primitive-action.service";
+import { PublicRsmActionsGeneric } from "projects/rsm-signal-state-management/src/lib/generic-classes";
+import { UserActionTypes } from "../actions/user-action.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class RsmPrimitiveActionsService extends PublicActionsRsmGeneric<RsmPrimitiveActionTypes>{
+export class UserActionsService extends PublicRsmActionsGeneric<UserActionTypes>{
   constructor() { 
     super();
   }
@@ -200,16 +217,16 @@ export class RsmPrimitiveActionsService extends PublicActionsRsmGeneric<RsmPrimi
 You just need to inject the action service in your component ts file and then use the dispatchNewAction() method and create a new instance of the action class you want and for the new class payload pass an object with any property you wish to have in the payload.
 
 ```typescript
-import { RsmActionsService } from 'src/app/store/services/rsm-action.service';
+import { UserActionsService } from 'src/app/store/services/user-action.service';
 
-rsmActionsService = inject(RsmActionsService);
+userActionsService = inject(UserActionsService);
 
-delayedDecrement() {
-    this.rsmActionsService.dispatchNewAction(new DelayedDecrement({value: this.counterCurrentValue() - 1}))
+login() {
+    this.userActionsService.dispatchNewAction(new UserLogin({username: 'admin', password: '12345'}))
   }
 
-resetCounter() {
-  this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', 0);
+logout() {
+  this.userActionsService.dispatchNewAction(new UserLogout());
 }
 ```
 
@@ -220,35 +237,35 @@ In the effect service constructor you need to listen to the actions state change
 
 ```typescript
 import { Injectable, effect,inject, Signal } from '@angular/core';
-import { RsmPrimitiveStoreService } from '../services/rsm-primitive-store.service';
-import { RsmPrimitiveActionTypes, RsmPrimitiveEnum } from '../actions/rsm-actions';
-import { RsmActionsService } from '../services/rsm-action.service';
+import { UserDetailsStoreService } from '../services/user-details-store.service';
+import { UserActionTypes, UserDetailsEnum } from '../actions/user-actions';
+import { UserActionsService } from '../services/user-action.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RsmPrimitiveEffectsService{
-  rsmPrimitiveStoreService = inject(RsmPrimitiveStoreService);
-  rsmActionsService = inject(RsmActionsService);
+export class UserEffectsService{
+  userDetailsStoreService = inject(UserDetailsStoreService);
+  userActionsService = inject(UserActionsService);
 
   constructor() {
-    const action = this.rsmActionsService.actionListener();
+    const action = this.userActionsService.actionListener();
     this.createEffects(action);
   }
 
-  private createEffects(action: Signal<RsmPrimitiveActionTypes>){
+  private createEffects(action: Signal<UserActionTypes>){
     effect(() => {
       switch(action().type) {
-        case RsmPrimitiveEnum.DelayedIncrement: {
-          setTimeout(() => {
-            this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', action().payload.value);
-          }, 2000);
+        case UserDetailsEnum.Login: {
+          this.http.post('/login', action().payload).subscribe(() => {
+            this.userDetailsStoreService.setStatePropertyByKey('userIsLoggedIn', true);
+          })
           break;
         }
-        case RsmPrimitiveEnum.DelayedDecrement: {
-          setTimeout(() => {
-            this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', action().payload.value);
-          }, 2000);
+        case UserDetailsEnum.Logout: {
+         this.http.get('/logout').subscribe(() => {
+             this.userDetailsStoreService.setStatePropertyByKey('userIsLoggedIn', false);
+          });
           break;
         }
       }
