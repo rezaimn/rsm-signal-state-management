@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { PublicRsmActionsGeneric } from "projects/rsm-signal-state-management/src/lib/generic-classes";
+import { PublicRsmActionsGeneric } from "projects/rsm-signal-state-management";
 import { RsmPrimitiveActionTypes } from "../actions/rsm-actions";
 
 @Injectable({
