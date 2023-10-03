@@ -1,8 +1,7 @@
-# Your Library Name
+# RSM Signal State Management: A Powerful Alternative to NgRx
 
-Brief description or tagline for your library.
 
-[![npm version](https://img.shields.io/npm/v/your-library-name.svg)](https://www.npmjs.com/package/your-library-name)
+[![npm version](https://img.shields.io/npm/v/your-library-name.svg)](https://www.npmjs.com/package/rsm-signal-state-management)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Table of Contents
@@ -10,60 +9,74 @@ Brief description or tagline for your library.
 - [Introduction](#introduction)
 - [Usage](#usage)
 - [API Documentation](#api-documentation)
+- [Conclusion](#conclusion)
 
 ## Installation
-
-You can install this library via npm:
-
 ```shell
-npm install run start
+npm run start
 ```
 
-## Introduction
-This is a very siple and powerful replacement for ngrx library, using Angular signals.
-Imagine you have a user entity with some states like, profile, balance, personalSettings.
-Also you have a product entity with some states like, info, availability.
+If you've ever worked with state management in Angular applications, you're likely familiar with NgRx. NgRx is a popular and robust library for managing state in Angular applications using Redux-inspired principles. However, what if I told you there's a simpler and more powerful alternative? Meet RSM Signal State Management.
 
+## Introduction
+RSM Signal State Management is a state management library that leverages Angular signals to provide a straightforward and efficient way to manage the state of your application. It offers an elegant and flexible solution that simplifies complex state management scenarios. You won't need to create Actions and Reducers for each state you want to update. Also you don't need to create Selectors to have access to the states values.
+
+RSM is a state management library built specifically for Angular. It offers a set of classes and functions designed to handle various aspects of state management with ease.
+
+Here's an overview of the Generic classes of RSM Signal State Management:
+
+**1- PublicRsmPrimitiveGenericClass:** Provides a generic class for managing primitive state types such as booleans, strings, and numbers.
+
+**2- PublicRsmEntityGenericClass:** Handles complex state types like arrays and objects also the simple Primitives.
+
+**3- PublicRsmQueueGenericClass:** Designed for creating queue systems, which are useful for handling modal systems, notifications, and more.
+
+**4- PublicRsmStackGenericClass:** Allows you to manage state as a stack, enabling you to handle stack operations efficiently.
+
+**5- PublicRsmActionsGeneric:** Provides a mechanism to create a message bus for dispatching and listening to actions within your application.
+
+Consider a typical Angular application with multiple entities, each having its own set of states. For instance, you might have a user entity with states like profile, balance, and personal settings, as well as a product entity with states like info and availability.
+
+### Create Model and Initialization
+RSM Signal State Management offers a solution that's both simple and powerful. You can structure your states in a way that suits your application's needs. For example, you can have separate state management for user and product entities or create a main state to consolidate them all in one place. Let's take a closer look.
 ```typescript
-interface UserState {
+export interface UserState {
   profile: UserProfile | undefined;
   balance: UserBalance |undefined;
   personalSettings: UserPersonalSettings | undefined;
 }
 
-interface ProductState {
+export interface ProductState {
   info: ProductInfo | undefined;
   availability: ProductAvailability | undefined;
 }
 
-const initialUserState: UserState {
+export const initialUserState: UserState {
   profile: undefined,
   balance: undefined,
   personalSettings: undefined
 }
 
-const initialProductState: ProductState {
+export const initialProductState: ProductState {
   info: undefined,
   availability: undefined,
 }
-```
-With this library you can either have separated state managements for user and product like up, or have a main state to hold them all together in one place like this:
 
-```typescript
-interface MainState {
+/*You can also, create a main state like this:*/
+
+export interface MainState {
   user: UserState | undefined;
   product: ProductState | undefined;
 }
 
-const initialMainState: MainState {
+export const initialMainState: MainState {
   user: undefined,
   product: undefined,
 }
 ```
-For the separated states you will gonna need to create separated services for each state and I personally prefer this method to encapsulate your entities states.
 
-To have a state management system for your entities you just need to define your state interface like we did, and also you need to have a initial value for each state also.
-
+### Create a store service to use the Generic Classes
+You also gonna need a service which extends one of the above generic classes from the library regarding what kind of state you want to create.
 ```typescript
 import { Injectable } from '@angular/core';
 import { PublicRsmEntityGenericClass } from 'projects/rsm-signal-state-management/src/lib/generic-classes/public-rsm-entity-generic';
@@ -76,21 +89,11 @@ export class UserStoreService extends PublicRsmEntityGenericClass<UserState>{
     super(initialUserState);
   }
 }
-
 ```
-You also gonna need a service which extends one of the following classes from the library regarding what kind of state we need to create.
 
-1- PublicRsmPrimitiveGenericClass ( for simple primitive values ).
-2- PublicRsmEntityGenericClass ( for arrays and objects and also the primitive states ) for our user case we need this one.
-3- PublicRsmQueueGenericClass ( to create a simple queue or priority queue, you can easily add or remove Items here).
-4- PublicRsmStackGenericClass ( to create a stack, you can easily push and pop Items here).
-5- PublicActionsRsmGeneric ( to dispatch and listen to actions ).
-
-All the mentioned classes have a protected version also, if you use the protected ones you can't have access to the functions and properties directly through the service is extending these classes and you will gonna need some public middleware functions to use the protected functions and properties.
-### Use the store service 
-
+### Use of the Store Service to update the states
 ```typescript
-  userStoreService = inject(UserStoreService);
+userStoreService = inject(UserStoreService);
 
 setUserProfileData(userProfile: UserProfile) {
   // 'profile' is the interface key
@@ -98,19 +101,14 @@ setUserProfileData(userProfile: UserProfile) {
 }
 // To get access to user profile data to use in html you can easily use the select function and pass the property key
 userProfileSignal: Signal<UserProfile> = this.userStoreService.select('profile');
-
 ```
+
 ## Usage
+Now, let's explore how to use RSM Signal State Management in your Angular application through various examples.
 
-To effectively use this library, follow these steps:
+### 1. Primitive State Manager
 
-### Create a Service
-
-To use this library, you'll need to create a service that extends one of the generic classes from the library. This will grant you access to the functions and properties within these classes. When extending a generic class, you should also pass the state model you intend to create as well as an initialization value for that state model.
-
-### Define the State Model and Initialization
-
-Here's an example of defining a state model and providing an initialization value for a simple state management system with two properties:
+First, create your state model and initialize it, then, create a service that extends the **PublicRsmPrimitiveGenericClass** to manage primitive state types. This class offers methods for setting, getting, and observing state changes.
 
 ```typescript
 export interface UserDetailsState {
@@ -124,11 +122,6 @@ export const initialUserDetailsState: UserDetailsState = {
   userIsLoggedIn: true,
   userAge: 0
 };
-```
-### Create a Service
-Next, create a service that extends one of the generic classes, like this:
-
-```typescript
 import { Injectable } from '@angular/core';
 import { PublicRsmPrimitiveGenericClass } from 'rsm-signal-state-management/src/lib/generic-classes/public-rsm-primitive-generic';
 
@@ -141,352 +134,167 @@ export class UserDetailsStoreService extends PublicRsmPrimitiveGenericClass<User
   }
 }
 ```
-With this service, you can easily access all the public methods and properties inside the generic class, enabling you to update and listen to state changes effectively.
-You can also access the protected methods and properties within the service itself. From there, you can create public methods within the service, which users of the service can utilize.
-### Example of Using the Service
-Here's an example of how to interact with the service:
+
+Now use the service to update the states:
 
 ```typescript
 // Import the service
 const userDetailsStoreService = inject(UserDetailsStoreService);
 
 // Example of set the 'username' property
-increment() {
+updateUsername() {
   userDetailsStoreService.setStatePropertyByKey('username', 'Test Username');
 }
 
 // Example of set the 'userIsLoggedIn' property
-decrement() {
+updateLoginState() {
   userDetailsStoreService.setStatePropertyByKey('userIsLoggedIn', true);
 }
 
 // Access the state
 const userDetailState: Signal<UserDetailsState> = userDetailsStoreService.state;
-
-```
-By following these steps, you can effectively manage and interact with the state using this service.
-
-### Create Actions and trigger Effects
-
-If you wish to create an action that can trigger an effect, which makes an API call, and then updates the state based on the result or error of that API call, you can follow these steps:
-
-```typescript
-import { Action } from 'projects/rsm-signal-state-management/src/lib/generic-classes/rsm-actions-generic';
-
-//Create an enum for having unique action names
-export enum UserDetailsEnum {
-  Login = '[User] Login',
-  Logout = '[User] Logout'
-}
-// Create classes which implements Action interface from action generic class
-export class UserLogin implements Action {
-  readonly type = UserDetailsEnum.Login;
-  constructor(public payload: { username: string, password: string }) {}
-}
-
-export class UserLogout implements Action {
-  readonly type = UserDetailsEnum.Logout;
-  constructor() {}
-}
-// Create an action type which includes all the action class types
-export type UserActionTypes = UserLogin | UserLogout;
-
 ```
 
-### Create an Action service 
+### 2. Entity State Manager
 
-This service extends the action generic class from the library and gets an Action Types model as the state model.
-
+To manage more complex state types, such as arrays and objects, create a service that extends **PublicRsmEntityGenericClass**. Here's an example of managing an array of users:
 ```typescript
-import { Injectable } from "@angular/core";
-import { PublicRsmActionsGeneric } from "projects/rsm-signal-state-management/src/lib/generic-classes";
-import { UserActionTypes } from "../actions/user-action.service";
+export interface UsersState {
+  users: User[];
+  userProfile: UserProfile | undefined;
+}
+
+export const initialUsersState: UsersState = {
+  users: [],
+  userProfile: undefined
+}
+```
+```typescript
+import { Injectable } from '@angular/core';
+import { PublicRsmEntityGenericClass } from 'rsm-signal-state-management';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserActionsService extends PublicRsmActionsGeneric<UserActionTypes>{
-  constructor() { 
-    super();
-  }
-}
-```
-
-### how to dispatch to an action
-
-You just need to inject the action service in your component ts file and then use the dispatchNewAction() method and create a new instance of the action class you want and for the new class payload pass an object with any property you wish to have in the payload.
-
-```typescript
-import { UserActionsService } from 'src/app/store/services/user-action.service';
-
-userActionsService = inject(UserActionsService);
-
-login() {
-    this.userActionsService.dispatchNewAction(new UserLogin({username: 'admin', password: '12345'}))
-  }
-
-logout() {
-  this.userActionsService.dispatchNewAction(new UserLogout());
-}
-```
-
-### How to listen to the dispatched action and update the states after API call
-
-Create an effect service and inject the action service you want to listen to and the state service you wish to update after the API call.
-In the effect service constructor you need to listen to the actions state change which gives you an Angular signal, you create a function and pass the action to it and use angular signal effect function to detect the action changes. you can have a switch-case to separate the actions and for each action you can call an API or do something async, in the result of the async operation you can update the state you want.
-
-```typescript
-import { Injectable, effect,inject, Signal } from '@angular/core';
-import { UserDetailsStoreService } from '../services/user-details-store.service';
-import { UserActionTypes, UserDetailsEnum } from '../actions/user-actions';
-import { UserActionsService } from '../services/user-action.service';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class UserEffectsService{
-  userDetailsStoreService = inject(UserDetailsStoreService);
-  userActionsService = inject(UserActionsService);
-
+export class UsersStoreService extends PublicRsmEntityGenericClass<UsersState> {
   constructor() {
-    const action = this.userActionsService.actionListener();
-    this.createEffects(action);
-  }
-
-  private createEffects(action: Signal<UserActionTypes>){
-    effect(() => {
-      switch(action().type) {
-        case UserDetailsEnum.Login: {
-          this.http.post('/login', action().payload).subscribe(() => {
-            this.userDetailsStoreService.setStatePropertyByKey('userIsLoggedIn', true);
-          })
-          break;
-        }
-        case UserDetailsEnum.Logout: {
-         this.http.get('/logout').subscribe(() => {
-             this.userDetailsStoreService.setStatePropertyByKey('userIsLoggedIn', false);
-          });
-          break;
-        }
-      }
-    });
+    super(initialUsersState); // Initialize
   }
 }
 ```
-### Other Usages
-
-### Primitive state manager
-To create a primitive state manager which only accepts the following types:
-boolean, string, number ...
-
-You will gonna need to create a service which is extends from public-rsm-primitive-generic.ts or 
-protected-rsm-primitive-generic.ts
-
-The protected one is for the cases which you don't want the service user have access to the state manager directly and you wish to have some middleware functions in the store service to interact with the state manager class.
-
-### Entity state manager
-To create an Entity state manager which only accepts the following types:
-Array, Object and Primitive states
-
-You will gonna need to create a service which is extends from public-rsm-entity-generic.ts or 
-protected-rsm-entity-generic.ts
-
-The protected one is for the cases which you don't want the service user have access to the state manager directly and you wish to have some middleware functions in the store service to interact with the state manager class.
-
-### Queue state manager
-To create an Queue state manager which only accepts the following types:
-Simple Queue and Priority Queue
-
-You will gonna need to create a service which is extends from public-rsm-queue-generic.ts or 
-protected-rsm-queue-generic.ts
-
-To use of priority queue each queue item should have a property with type number to show the item priority.
-
-The protected one is for the cases which you don't want the service user have access to the state manager directly and you wish to have some middleware functions in the store service to interact with the state manager class.
-
-### Stack state manager
-To create an Entity state manager which only accepts the following types:
-Stack
-
-You will gonna need to create a service which is extends from public-rsm-stack-generic.ts or 
-protected-rsm-stack-generic.ts
-
-The protected one is for the cases which you don't want the service user have access to the state manager directly and you wish to have some middleware functions in the store service to interact with the state manager class.
-
-## API Documentation
-
-First of all you should know all the functions, classes and properties in this library is type safe so you can not call them and use them with wrong inputs or outputs.
-
-The simplest class is the primitive generic class 
-
-### Primitive state manager
 ```typescript
-import { signal, computed, Signal, WritableSignal } from '@angular/core';
+usersStoreService = inject(UsersStoreService);
 
-// Define a type for the store state with keys to track changes.
-type StoreStateWithKeys<StatesModel> = {
-  // lastUpdatedKeys is an array which keeps last updates state property keys, when user updates a single key or bunch of keys, this array will be updated.
-  lastUpdatedKeys: Array<keyof StatesModel> | undefined;
-  state: StatesModel;
-};
+addNewUser(user: User) {
+  this.usersStoreService.addItemToEndOfArray('users', user);
+}
 
-// Create a class for managing a generic state using Angular signals.
-export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
-  // Private state to hold the data. This must pe private to prevent user write new value directly into the state properties.
-  protected readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
-    lastUpdatedKeys: undefined,
-    state: {} as StatesModel,
-  });
+updateUserProfile(userProfile: UserProfile) {
+  this.usersStoreService.updateExistingObjectPartiallyByPropertyKey('userProfile', userProfile);
+  // or
+  this.usersStoreService.setStatePropertyByKey('userProfile', userProfile);
+}
 
-  // Public signal for external components to access the state.
-  readonly store: Signal<StoreStateWithKeys<StatesModel>> = computed(() => {
-    return this.privateState();
-  });
+removeUserById(userId: string) {
+  this.usersStoreService.removeArrayItemByPropertyValue('users', 'id', userId);
+}
+```
 
-  // Constructor to initialize the state with initial values.
-  constructor(initialValues: StatesModel) {
-    this.setAllStateProperties(initialValues); // Set initial state
-  }
+### 3. Queue State Manager
 
-  // Select a specific property from the state.
-  public select<K extends keyof StatesModel>(statePropertyKey: K): Signal<StatesModel[K]> {
-    return computed(() => this.privateState().state[statePropertyKey]);
-  }
+Creating a queue system for managing modal dialogs or notifications becomes straightforward with RSM Signal State Management. Here's an example of managing a notification queue:
+```typescript
+export interface NotificationsState {
+  notifs: Notification[];
+  currentNotif: Notification | undefined;
+}
 
-  // Expose a readonly state properties.
-  readonly state: Signal<StatesModel> = computed(() => {
-    return this.privateState().state;
-  });
+export const initialNotificationsState: NotificationsState = {
+   notifs: [],
+   currentNotif: undefined
+}
+```
+```typescript
+import { Injectable } from '@angular/core';
+import { PublicRsmQueueGenericClass } from 'rsm-signal-state-management';
 
-  // Set a state property in the store. you need to pass the statePropertyKey that shows which state property you wish to update, and the data which is the updating value for that state property
-  public setStatePropertyByKey<K extends keyof StatesModel>(statePropertyKey: K, data: StatesModel[K]) {
-    const objectType = Object.prototype.toString.call(data);
-    this.privateState.update((currentValue) => ({
-      ...currentValue,
-      lastUpdatedKeys: [statePropertyKey],
-      state: { ...currentValue.state, [statePropertyKey]: objectType === '[object Object]'? { ...data }: data  },
-    }));
-  }
-
-  // Set all properties in the store. 
-  public setAllStateProperties(allStates: StatesModel): void {
-    const keys = Object.keys(allStates) as Array<keyof StatesModel>;
-    this.privateState.update((currentValue) => ({
-      ...currentValue,
-      lastUpdatedKeys: keys,
-      state: { ...allStates },
-    }));
+@Injectable({
+  providedIn: 'root'
+})
+export class NotificationStoreService extends PublicRsmQueueGenericClass<NotificationsState> {
+  constructor() {
+    super(initialNotificationsState);
   }
 }
 ```
-### Entity state manager
-
-The useful functions of Entity state manager and how to use them:
-
-**1-getArraySize(statePropertyKey):**  This function accepts a statePropertyKey as input which must be one of the keys of the state model we sent to the generic class and also the key must represent an array type then, it will returns a number as the array size, other than you will get an error while developing time.
-
-**2- updateExistingObjectPartiallyByPropertyKey(statePropertyKey, data):** This function gets a statePropertyKey to determine which key you want to update and a data which extends partial of the object interface, so you can update some or all of the properties inside your object state. for example you have a user profile object which has:
-
 ```typescript
-interface UserProfile {
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  age: number;
-}
-// you can easily update the user email like this.
-this.userStoreService.updateExistingObjectPartiallyByPropertyKey('profile', {email: 'test@gmail.com'});
-```
-**3- addItemToEndOfArray(statePropertyKey, item):** Using this function you can easily add a new item to the end of a property type array in your state management. like the push method of arrays
+notifsStoreService = inject(NotificationsStoreService);
+currentNotification: Signal<Notification | undefined> = this.notifsStoreService.select('currentNotif');
+notificationsQueue: Signal<Notification[]> = this.notifsStoreService.select('notifs');
 
-```typescript
-interface User {
-  products: Product[],
-  history: History[]
+addNewNotification(notif: Notification) {
+// If currently showing a notif, then add the new notif to the queue
+  if (this.currentNotification()) {
+    this.notifsStoreService.addItemToQueue('notifs', notif);
+  } else {
+// If there are no notifs displaying then add the new notif to the current notif
+    this.notifsStoreService.setStatePropertyByKey('currentNotif', notif);
+  }
 }
 
-this.userStoreService.addItemToEndOfArray('products', product); // product must be an object with Product type
-
-```
-**4- addItemToStartOfArray(statePropertyKey, item):** The same but it adds the new item to the start of the array.
-like unShift method of arrays.
-
-**5- addItemToArrayAtIndex(statePropertyKey,
-index,
-item):** This will add a new item to an specific index in array.
-
-**6- addSubArrayToStart(statePropertyKey,
-subArray):** This method adds a sub-array with the same type to the start of an existed array.
-
-**7- addSubArrayToEnd(statePropertyKey,
-subArray):** This method adds a sub-array to the end of an existed array.
-
-**8- addSubArrayAtIndex(statePropertyKey,
-index,
-subArray):** This will add a sub-array to a specific index in an exited array.
-
-**9- removeArrayItemFromStartOfArray(statePropertyKey):** This removes an Item from the start of an existed array.
-
-**10- removeArrayItemFromEndOfArray(statePropertyKey):** This removes an Item from the end of an existed array.
-
-**11- removeArrayItemsFromIndex(statePropertyKey, index, deleteCount):** remove some array items from a specific index.
-
-**12- removeArrayItemByPropertyValue(statePropertyKey,
-removePropertyKey,
-removePropertyValue):** remove an item in an existed array whish has a property key with a certain value.
-```typescript
-interface UserProfile {
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  age: number;
+// Fetch a notif from notif queue and show it
+showNewNotifFromQueue() {
+  if (this.notificationsQueue.length !==0) {
+    const pickedNotif: Signal<Notification | null> = this.notifsStoreService.removeItemFromQueue('notifs');
+    this.notifsStoreService.setStatePropertyByKey('currentNotif', pickedNotif);
+  }
 }
-interface UserState {
-  users: UserProfile
-}
-this.userStoreService.removeArrayItemByPropertyValue('users','username','john');
-//or
-this.userStoreService.removeArrayItemByPropertyValue('users','age',12);
-
 ```
 
-**13- getArrayItemByPropertyValue(statePropertyKey,
-compareKey,
-compareValue):** Retrieve the item with the certain ke value in an existed array.
+### 4. Stack State Manager
 
-### Queue state manager
-You can use this class to handle your modal system, notification system and any logic you will need a queue or priority queue in it.
-
-The useful functions of Queue state manager and how to use them:
-
-**1- getQueueSize(statePropertyKey):** This method returns a signal which represents the queue size.
-
-**2- addItemToQueue(statePropertyKey,
-item):** This method adds a new item to the end of the queue.
-
-**3- removeItemFromQueue(statePropertyKey):** This method removes an item from the start of the que and returns the removed item.
-
-**4- addItemToPriorityQueueByPriorityKey(statePropertyKey,
-priorityKey,
-priorityOrder,
-item):** This method adds a new item to a priority queue, priorityKey is a key which this method compare the new item's priority with the existed items priority and uses the priorityOrder value to add the new item to the right place in the queue. priorityOrder has two value, first one 'smaller-higher', it means if the value of priorityKey is smaller then in the queue the item should have more priority, the second one is 'bigger-higher', its the opposed of the first one.
-
+Managing state as a stack is useful for scenarios like navigation history. Here's an example of managing a Breadcrumbs stack:
 ```typescript
-    this.userStoreService.addItemToPriorityQueueByPriorityKey('userQueue','priority','smaller-higher',{username:'something',priority: 2, ...});
-``` 
+export interface BreadcrumbsStackState {
+  breadcrumbs: Breadcrumb[];
+}
 
-### Actions state manager
-
-With this class you can easily create a message bus to dispatch messages on a message bus and listen to the bus for a certain message type.
-
-**1- dispatchNewAction(action):** This method receives a new class which has a unique type property to be able to verify the message type and a payload to pass data for each action type.
-
-actions will be defined kind of like how it works in ngrx. 
-
+export const initialBreadcrumbsStackState = {
+  breadcrumbs: []
+}
+```
 ```typescript
-import { Action } from 'projects/rsm-signal-state-management/src/lib/generic-classes/rsm-actions-generic';
+import { Injectable } from '@angular/core';
+import { PublicRsmStackGenericClass } from 'rsm-signal-state-management';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BreadcrumbsStoreService extends PublicRsmStackGenericClass<BreadcrumbsStackState> {
+  constructor() {
+    super(initialBreadcrumbsStackState);
+  }
+}
+```
+```typescript
+breadcrumbsStoreService = inject(BreadcrumbsStoreService);
+
+addNewRouteToBreadcrumbs(breadcrumb: Breadcrumb) {
+  this.breadcrumbsStoreService.pushItemToStack('breadcrumbs', breadcrumb);
+}
+
+goOneStepBackInBreadcrumbs() {
+  const currentRouteData: Signal<Breadcrumb> = this.breadcrumbsStoreService.popFromStack('breadcrumbs');
+}
+```
+
+You can push, pop, and observe items in the navigation stack with ease.
+
+### 5. Actions State Manager
+
+Finally, the Actions State Manager allows you to create a message bus for dispatching and listening to actions within your application. Define your action types and use them to dispatch and listen for actions.
+```typescript
+import { Action } from 'rsm-signal-state-management';
 
 export enum UserActionsEnum {
   AddNewUser = '[User] Add',
@@ -502,39 +310,49 @@ export class RemoveUserActionType implements Action {
   constructor(public payload: { userId: string }) {}
 }
 export type UserActionTypes = AddNewUserActionType | RemoveUserActionType;
-
 ```
-The action service
 ```typescript
-import { Injectable } from "@angular/core";
-import { PublicActionsRsmGeneric } from "projects/rsm-signal-state-management/src/lib/generic-classes";
-import { UserActionTypes } from "../actions/user-actions";
+export interface UsersState {
+  users: User[];
+}
+
+export const initialUsersState: UsersState = {
+  users: []
+};
+```
+```typescript
+import { Injectable } from '@angular/core';
+import { PublicActionsRsmGeneric } from 'rsm-signal-state-management';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserActionsService extends PublicActionsRsmGeneric<UserActionTypes>{
-  constructor() { 
+export class UserActionsService extends PublicActionsRsmGeneric<UserActionTypes> {
+  constructor() {
     super();
   }
 }
 ```
+```typescript
+import { Injectable } from "@angular/core";
+import { PublicRsmEntityGeneric } from "rsm-signal-state-management";
 
-How to dispatch
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersStoreService extends PublicRsmActionsGeneric<UsersState>{
+  constructor() { 
+    super(initialUsersState);
+  }
+}
+```
 ```typescript
 userActionsService = inject(UserActionsService);
 
 this.userActionsService.dispatchNewAction(new AddNewUserActionType(user));//user is an object with type User
 ```
-
-How to listen to an action.
-**1- actionListener():** When ever a new action dispatches to the action state the action listener will update the current action withe new action, this method returns a signal with type of the action types and with using Angular signal effects you can listen to it's changes.
-
 ```typescript
 import { Injectable, effect,inject, Signal } from '@angular/core';
-import { UserStoreService } from '../services/user-store.service';
-import { UserActionTypes, UserActionsEnum } from '../actions/user-actions';
-import { UserActionsService } from '../services/user-action.service';
 
 @Injectable({
   providedIn: 'root'
@@ -552,13 +370,13 @@ export class UserEffectsService{
     effect(() => {
       switch(action().type) {
         case UserActionsEnum.AddNewUser: {
-         this.http.post('url',action().payload).subscribe((value:any) =>{
+         this.http.post('url',action().payload).subscribe(() =>{
             this.userStoreService.addItemToEndOfArray('users', action().payload);
           })
           break;
         }
         case RsmPrimitiveEnum.RemoveUser: {
-          this.http.delete('url',action().payload.userId).subscribe((value:any) =>{
+          this.http.delete('url',action().payload.userId).subscribe(() =>{
             this.userStoreService.removeArrayItemByPropertyValue('users','id' action().payload.id);
           })
           break;
@@ -568,9 +386,123 @@ export class UserEffectsService{
   }
 }
 ```
-This is a new library and I really love to know about the issues and the improvements I can make so please open new issues in the github repository if you find an issue or you needed an improvement.
+
+## API Documentation
+
+### 1. Primitive State Manager
+- **setStatePropertyByKey(statePropertyKey, data):** Sets a state property in the store. you need to pass the **statePropertyKey** that shows which state property you wish to update, and the **data** which is the new value for that state property.
+
+- **setAllStateProperties(allStates):** Sets all the states at once and mainly uses for the initializing the states.
+
+- **select(statePropertyKey):** Returns a specific property from the state as a Signal. Using **statePropertyKey** to specify which property you need to be selected.
+
+- **store:** This property gives you the whole states value as a Signal.
+
+### 2. Entity State Manager
+
+- **getArraySize(statePropertyKey):** This function takes a **statePropertyKey** as its input, which should be one of the keys from the state model provided to the generic class. Additionally, the specified key must correspond to an array type property. If this condition is not met, you will encounter a development-time error.
+
+- **updateExistingObjectPartiallyByPropertyKey(statePropertyKey, data):** This function takes a **statePropertyKey** to identify the specific key you wish to update within your state. Additionally, it expects a **data** parameter that extends a partial of the object interface. This allows you to update either some or all of the properties within your object state. For instance, suppose you have a user profile object like this:
+```typescript
+interface UserProfile {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  age: number;
+}
+// you can easily update the user email like this.
+this.userStoreService.updateExistingObjectPartiallyByPropertyKey('profile', {email: 'test@gmail.com'});
+```
+
+- **addItemToEndOfArray(statePropertyKey, item):** With this function, you can effortlessly append a new item to the end of an array property within your state management, similar to how the push method works for arrays.
+```typescript
+interface User {
+  products: Product[],
+  history: History[]
+}
+
+this.userStoreService.addItemToEndOfArray('products', product); // product must be an object with Product type
+```
+
+- **addItemToStartOfArray(statePropertyKey, item):** Similarly, this function adds a new item to the beginning of the array, akin to the unshift method for arrays.
+
+- **addItemToArrayAtIndex(statePropertyKey, index, item):** his function allows you to add a new item to a specific index within an array.
+
+- **addSubArrayToStart(statePropertyKey, subArray):** This method appends a sub-array of the same type to the beginning of an existing array.
+
+- **addSubArrayToEnd(statePropertyKey, subArray):** This method appends a sub-array to the end of an existing array.
+
+- **addSubArrayAtIndex(statePropertyKey, index, subArray):** This method inserts a sub-array at a specific index within an existing array.
+
+- **removeArrayItemFromStartOfArray(statePropertyKey):** This method removes an item from the beginning of an existing array.
+
+- **removeArrayItemFromEndOfArray(statePropertyKey):** This method removes an item from the end of an existing array.
+
+- **removeArrayItemsFromIndex(statePropertyKey, index, deleteCount):** This method removes some array items from a specific index.
+
+- **removeArrayItemByPropertyValue(statePropertyKey, removePropertyKey, removePropertyValue):** This method removes an item from an existing array that has a property key with a certain value.
+```typescript
+interface UserProfile {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  age: number;
+}
+interface UserState {
+  users: UserProfile
+}
+this.userStoreService.removeArrayItemByPropertyValue('users','username','john');
+//or
+this.userStoreService.removeArrayItemByPropertyValue('users','age',12);
+```
+- **getArrayItemByPropertyValue(statePropertyKey, compareKey, compareValue):** Retrieve the item with a certain key value in an existing array.
+
+### 3. Queue State Manager
+
+You can utilize this class to manage various tasks such as handling modal systems, notification systems, and any logic that requires a queue or priority queue. Here are the useful functions of the Queue state manager and how to use them:
+
+- **getQueueSize(statePropertyKey):** This method returns a signal representing the current size of the queue.
+
+- **addItemToQueue(statePropertyKey, item):** Use this method to add a new item to the end of the queue.
+
+- **removeItemFromQueue(statePropertyKey):** This method removes an item from the start of the queue and returns the removed item.
+
+- **addItemToPriorityQueueByPriorityKey(statePropertyKey, priorityKey, priorityOrder, item):** You can employ this method to add a new item to a priority queue. The **priorityKey** is a property key used to compare the priority of the new item with the priorities of existing items in the queue. The **priorityOrder** parameter specifies the order of priority, which can have two values: **'smaller-higher'** (indicating that smaller values of priorityKey have higher priority) or **'bigger-higher'** (indicating the opposite). This method ensures that the new item is added to the appropriate position in the priority queue based on its priority.
+```typescript
+ this.userStoreService.addItemToPriorityQueueByPriorityKey('userQueue','priority','smaller-higher',{username:'something',priority: 2, ...});
+```
+
+### 4. Stack State Manager
+
+You can manage stacks with this state manager, it has two simple functions to use:
+
+- **pushItemToStack(statePropertyKey, item):** This function gets a **statePropertyKey** to specify which stack you want to use and the **item** to push into the stack.
+
+- **popFromStack(statePropertyKey):** This function gets a **statePropertyKey** to specify which stack you want to use, and it returns the **top** item on the stack as a signal.
+
+
+### 5. Action State Manager
+
+This class enables you to create a message bus for dispatching messages and listening to specific message types. Here's how to use it:
+
+- **dispatchNewAction(action):** Use this method to dispatch a new message. It takes a class that should have a unique type property to identify the message type and an optional payload to pass data for each action type.
+
+- **actionListener():** Whenever a new action is dispatched to the action state, the actionListener method will update the current action with the new action. This method returns a signal with the type of the action types defined in your application. You can then use Angular signal effects to listen to changes in this signal and react accordingly when new actions are dispatched.
+
+
+## Conclusion
+State management is a fundamental aspect of building robust Angular applications. The RSM Signal State Management library simplifies this process by offering a set of generic classes and functions tailored to various state management scenarios.
+
+By using RSM Signal State Management, you can streamline your state management code, make your application more maintainable, and ensure that your components always reflect the correct application state. Whether you need to manage primitive states, entities, queues, stacks, or actions, RSM Signal State Management has you covered.
+
+Give this library a try in your next Angular project and experience the benefits of efficient state management firsthand. For more information and detailed usage instructions, you can check out the official GitHub repository https://github.com/rezaimn/rsm-signal-state-management.
+
+npm package link https://www.npmjs.com/package/rsm-signal-state-management
 
 my personal email is mohammadrezaimn@gmail.com
-my linkedIn account is https://www.linkedin.com/in/mohammadreza-imani-08083662/
 
-you can contact me any time and ask your questions.
+my linkedIn account https://www.linkedin.com/in/mohammadreza-imani-08083662/
+
+Happy coding!
