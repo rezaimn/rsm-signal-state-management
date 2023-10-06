@@ -14,7 +14,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
   ): Signal<number> {
     return computed(() => {
       // Retrieve the array and return its length.
-      const array = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+      const array = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
       return array.length;
     });
   }
@@ -22,7 +22,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
   // Update an Object property partially by key and data.
   public updateExistingObjectPartiallyByPropertyKey<K extends keyof StatesModel>(statePropertyKey: K, data: Partial<StatesModel>[K]) {
     const objectType = Object.prototype.toString.call(data);
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
     if (objectType === '[object Object]') {
       this.setStatePropertyByKey(statePropertyKey, { ...currentValue, ...data });
     }
@@ -33,7 +33,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     statePropertyKey: K,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
     if (Array.isArray(currentValue)) {
       // Add the item to the end of the array and update the state.
       this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
@@ -45,7 +45,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     statePropertyKey: K,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
 
     if (Array.isArray(currentValue)) {
       // Add the item to the start of the array and update the state.
@@ -59,7 +59,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     index: number,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     console.log(currentValue?.length, index)
     if (index >= 0 && index <= currentValue?.length) {
       // Insert the item at the specified index and update the state.
@@ -74,7 +74,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     statePropertyKey: K,
     subArray: Array<StatesModel[K] extends Array<infer U> ? U : never>
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
   
     if (Array.isArray(currentValue)) {
       // Concatenate the subarray to the start of the array and update the state.
@@ -87,7 +87,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     statePropertyKey: K,
     subArray: Array<StatesModel[K] extends Array<infer U> ? U : never>
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
   
     if (Array.isArray(currentValue)) {
       // Concatenate the subarray to the end of the array and update the state.
@@ -101,7 +101,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     index: number,
     subArray: Array<StatesModel[K] extends Array<infer U> ? U : never>
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (index >= 0 && index <= currentValue?.length) {
       // Insert the subarray at the specified index and update the state.
@@ -115,7 +115,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
   public removeArrayItemFromStartOfArray<K extends keyof StatesModel>(
     statePropertyKey: K
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (currentValue?.length > 0) {
       // Remove the first item and update the state.
@@ -127,7 +127,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
   public removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
     statePropertyKey: K
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (currentValue?.length > 0) {
       // Remove the last item and update the state.
@@ -141,7 +141,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     index: number,
     deleteCount: number
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     if (index >= 0 && index < currentValue?.length && index + deleteCount <= currentValue?.length) {
       // Remove items from the specified index and update the state.
       this.setStatePropertyByKey(statePropertyKey, [
@@ -157,7 +157,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     removePropertyKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     removePropertyValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (Array.isArray(currentValue)) {
       // Filter out the item with the matching ID and update the state.
@@ -174,7 +174,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     compareKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     compareValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
   ): StatesModel[K] extends Array<infer U> ? U : never {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     const item = currentValue?.find((item: StatesModel[K] extends Array<infer U> ? U : never) => {
       return item[compareKey] == compareValue;
     }) as StatesModel[K] extends Array<infer U> ? U : never;

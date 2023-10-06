@@ -9,7 +9,7 @@ type StoreStateWithKeys<StatesModel> = {
 // A generic class for managing primitive state properties.
 export class ProtectedRsmPrimitiveGenericClass<StatesModel extends object> {
   // Create a private state property with an initial value.
-  protected readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
+  private readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
     lastUpdatedKeys: undefined,
     state: {} as StatesModel,
   });
