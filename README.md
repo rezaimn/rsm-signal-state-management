@@ -37,6 +37,99 @@ Here's an overview of the Generic classes of RSM Signal State Management:
 
 Consider a typical Angular application with multiple entities, each having its own set of states. For instance, you might have a user entity with states like profile, balance, and personal settings, as well as a product entity with states like info and availability.
 
+### So, how it actually works under the hood
+
+At the heart of this system lies a generic class, a powerhouse for managing application state. It serves as the backbone for handling, updating, and sharing data across your application. Here it is the most simple generic class:
+
+```typescript
+import { signal, computed, Signal, WritableSignal } from '@angular/core';
+
+// Define a type for the store state with keys to track changes.
+type StoreStateWithKeys<StatesModel> = {
+  // lastUpdatedKeys is an array which keeps last updates state property keys, when user updates a single key or bunch of keys, this array will be updated.
+  lastUpdatedKeys: Array<keyof StatesModel> | undefined;
+  state: StatesModel;
+};
+
+// Create a class for managing a generic state using Angular signals.
+export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
+  // Private state to hold the data. This must pe private to prevent user write new value directly into the state properties.
+  private readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
+    lastUpdatedKeys: undefined,
+    state: {} as StatesModel,
+  });
+
+  // Public signal for external components to access the state.
+  readonly store: Signal<StoreStateWithKeys<StatesModel>> = computed(() => {
+    return this.privateState();
+  });
+
+  // Constructor to initialize the state with initial values.
+  constructor(initialValues: StatesModel) {
+    this.setAllStateProperties(initialValues); // Set initial state
+  }
+
+  // Select a specific property from the state.
+  public select<K extends keyof StatesModel>(statePropertyKey: K): Signal<StatesModel[K]> {
+    return computed(() => this.privateState().state[statePropertyKey]);
+  }
+
+  // Expose a readonly state properties.
+  readonly state: Signal<StatesModel> = computed(() => {
+    return this.privateState().state;
+  });
+
+  // Set a state property in the store. you need to pass the statePropertyKey that shows which state property you wish to update, and the data which is the updating value for that state property
+  public setStatePropertyByKey<K extends keyof StatesModel>(statePropertyKey: K, data: StatesModel[K]) {
+    const objectType = Object.prototype.toString.call(data);
+    this.privateState.update((currentValue) => ({
+      ...currentValue,
+      lastUpdatedKeys: [statePropertyKey],
+      state: { ...currentValue.state, [statePropertyKey]: objectType === '[object Object]'? { ...data }: data  },
+    }));
+  }
+
+  // Set all properties in the store. 
+  public setAllStateProperties(allStates: StatesModel): void {
+    const keys = Object.keys(allStates) as Array<keyof StatesModel>;
+    this.privateState.update((currentValue) => ({
+      ...currentValue,
+      lastUpdatedKeys: keys,
+      state: { ...allStates },
+    }));
+  }
+}
+```
+
+The journey begins by defining a state model. This model acts as a blueprint for the data you intend to manage within your application. It's essential to have a clear understanding of your data structure from the outset.
+
+#### StoreStateWithKeys<StatesModel>:
+**lastUpdatedKeys:** An array that keeps track of the keys (or properties) within the state that have seen recent updates.
+
+**state:** An object representing the actual application state.
+
+#### Safeguarding State Data
+Data integrity is a priority, and to protect against direct manipulation, we establish a private state object named **privateState**. This object, of type **WritableSignal<StoreStateWithKeys<StatesModel>>**, acts as a secure container housing both the state data and the lastUpdatedKeys array.
+
+Initially, the state is set as an empty object ({}), with lastUpdatedKeys left undefined. External access to this private state is tightly controlled, allowing read and modification only through designated functions.
+
+#### Public Access via Signals
+To provide external components and services access to the state, we introduce a public signal known as **store**. This signal offers a read-only perspective of the state residing within **privateState**. It ensures that external parts of the application can observe the state while preventing direct alterations.
+
+#### Initialization via Constructor
+Upon creating a service instance, you pass in initial values for your state. The constructor, in turn, triggers **setAllStateProperties(initialValues)** to initialize the state with the provided data.
+
+#### Selecting Specific State Properties
+
+Accessing individual state properties is made possible through the select function. It returns a signal representing a specific property of the state, enabling you to track changes in specific data within the state.
+
+#### Modifying State
+
+To enact changes in the state, you rely on the **setStatePropertyByKey** function. This function takes a key (property name) and the new data value to assign to that key. It's designed to handle various data types, ensuring the state remains consistent.
+Furthermore, the **setAllStateProperties** function allows for simultaneous updates of multiple properties, accepting an object containing all the new values.
+
+#### A Unified Store
+Beneath the surface, a single **privateState** object is responsible for housing the entire state management. Regardless of whether you're updating one or multiple properties, all changes are funneled through this central store. This approach ensures that modifications are coordinated and maintain consistency across the application.
 ### Create Model and Initialization
 RSM Signal State Management offers a solution that's both simple and powerful. You can structure your states in a way that suits your application's needs. For example, you can have separate state management for user and product entities or create a main state to consolidate them all in one place. Let's take a closer look.
 ```typescript
