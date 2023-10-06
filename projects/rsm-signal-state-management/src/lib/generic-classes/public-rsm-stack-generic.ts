@@ -14,7 +14,7 @@ export class PublicRsmStackGenericClass<StatesModel extends object> extends Publ
   ): Signal<number> {
     return computed(() => {
       // Retrieve the array and return its length.
-      const array = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+      const array = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
       return array.length;
     });
   }
@@ -23,7 +23,7 @@ export class PublicRsmStackGenericClass<StatesModel extends object> extends Publ
   private removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
     statePropertyKey: K
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (Array.isArray(currentValue) && currentValue.length > 0) {
       // Remove the last item from the array and update the state.
@@ -36,7 +36,7 @@ export class PublicRsmStackGenericClass<StatesModel extends object> extends Publ
     statePropertyKey: K,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
     if (Array.isArray(currentValue)) {
       // Add the item to the end of the array and update the state.
       this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
@@ -47,7 +47,7 @@ export class PublicRsmStackGenericClass<StatesModel extends object> extends Publ
   public popFromStack<K extends keyof StatesModel>(
     statePropertyKey: K
   ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     if(currentValue?.length > 0) {
       // Remove and return the last item from the array.
       const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];

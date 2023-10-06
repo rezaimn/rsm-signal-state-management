@@ -14,7 +14,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
   ): Signal<number> {
     return computed(() => {
       // Retrieve the array and return its length, considering null or undefined values.
-      const array = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+      const array = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
       return array?.length;
     });
   }
@@ -24,7 +24,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
     statePropertyKey: K,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
 
     if (Array.isArray(currentValue)) {
       // Add the item to the start of the array and update the state.
@@ -36,7 +36,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
   private removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
     statePropertyKey: K
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (currentValue?.length > 0) {
       // Remove the last item from the array and update the state.
@@ -56,7 +56,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
   public removeItemFromQueue<K extends keyof StatesModel>(
     statePropertyKey: K
   ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     if(currentValue?.length > 0) {
       // Remove and return the first item from the array.
       const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];
@@ -70,7 +70,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
     statePropertyKey: K,
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey];
+    const currentValue = this.store().state[statePropertyKey];
     if (Array.isArray(currentValue)) {
       this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
     }
@@ -83,7 +83,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
     priorityOrder: 'smaller-higher' | 'bigger-higher',
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
-    const currentValue = this.privateState().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     if (Array.isArray(currentValue)) {
       const insertionIndex = currentValue.findIndex(((queueItem: any) => {
         if (item) {

@@ -10,7 +10,7 @@ type StoreStateWithKeys<StatesModel> = {
 // Create a class for managing a generic state using Angular signals.
 export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
   // Private state to hold the data. This must pe private to prevent user write new value directly into the state properties.
-  protected readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
+  private readonly privateState: WritableSignal<StoreStateWithKeys<StatesModel>> = signal({
     lastUpdatedKeys: undefined,
     state: {} as StatesModel,
   });

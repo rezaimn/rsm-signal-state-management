@@ -12,7 +12,7 @@ type ActionsStore<ActionTypes> = {
 
 export class ProtectedRsmActionsGeneric <ActionTypes extends Action> {
   // Private state to hold the data.
-  protected readonly privateState: WritableSignal<ActionsStore<ActionTypes>> = signal({
+  private readonly privateState: WritableSignal<ActionsStore<ActionTypes>> = signal({
     action: {
       type: '',
       payload: {}
