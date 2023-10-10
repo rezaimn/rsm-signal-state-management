@@ -1,6 +1,6 @@
 import { signal, computed, Signal, WritableSignal } from '@angular/core';
 
-export interface Action {
+interface Action {
   type: string;
   payload: any;
 }

@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { RsmStackState, initialRsmStackState } from '../models/rsm-stack.model';
-import { PublicRsmStackGenericClass } from 'projects/rsm-signal-state-management/src/lib/generic-classes/public-rsm-stack-generic';
+import { PublicRsmStackGenericClass } from 'projects/rsm-signal-state-management/src/lib/public-rsm-stack-generic';
 
 @Injectable({
   providedIn: 'root'

@@ -1,4 +1,4 @@
-import { Action } from 'projects/rsm-signal-state-management/src/lib/generic-classes/public-rsm-actions-generic';
+import { Action } from 'projects/rsm-signal-state-management/src/lib/public-rsm-actions-generic';
 
 export enum RsmPrimitiveEnum {
   DelayedIncrement = '[Counter] DelayedIncrement',
