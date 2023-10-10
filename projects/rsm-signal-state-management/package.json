@@ -1,6 +1,6 @@
 {
   "name": "rsm-signal-state-management",
-  "version": "1.2.6",
+  "version": "1.2.8",
   "peerDependencies": {
     "@angular/common": "~16.1.0",
     "@angular/core": "~16.1.0"
@@ -8,7 +8,6 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
-  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/rezaimn/rsm-signal-state-management"

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RsmQueueState, initialRsmQueueState } from '../models/rsm-queue.model';
-import { PublicRsmQueueGenericClass } from 'projects/rsm-signal-state-management/src/lib/generic-classes/public-rsm-queue-generic';
+import { PublicRsmQueueGenericClass } from 'projects/rsm-signal-state-management/src/lib/public-rsm-queue-generic';
 
 @Injectable({
   providedIn: 'root'
