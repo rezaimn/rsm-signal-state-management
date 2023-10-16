@@ -126,6 +126,28 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
     }
   }
 
+  // Update an item from an array property by its property key and value.
+  public updateArrayItemByPropertyValue<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    updatePropertyKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
+    updatePropertyValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never,
+    updateItem: StatesModel[K] extends Array<infer U> ? U : never
+  ): void {
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+
+    if (Array.isArray(currentValue)) {
+      // Find the item with the matching property key and value and update the state.
+      const updateIndex = currentValue.findIndex((item: StatesModel[K] extends Array<infer U> ? U : never) => {
+        return item[updatePropertyKey] === updatePropertyValue;
+      });
+      const newArray = [...currentValue] ;
+      if(updateIndex >= 0){
+        newArray[updateIndex] = updateItem;
+      }
+      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+    }
+  }
+
   /*TODO return removed item*/
   // Remove an item from the start of an array property.
   protected removeArrayItemFromStartOfArray<K extends keyof StatesModel>(
@@ -169,7 +191,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       ] as StatesModel[K]);
     }
   }
-  
+
   /*TODO return removed item and implement removing all the items with the met conditions*/
   // Remove an array item by comparing a property value.
   protected removeArrayItemByPropertyValue<K extends keyof StatesModel>(
