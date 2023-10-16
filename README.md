@@ -528,6 +528,8 @@ this.userStoreService.addItemToEndOfArray('products', product); // product must 
 
 - **addSubArrayAtIndex(statePropertyKey, index, subArray):** This method inserts a sub-array at a specific index within an existing array.
 
+- **updateItemOfArrayAtIndex(statePropertyKey, index, item):** This method updates an item at a specific index within an existing array.
+
 - **removeArrayItemFromStartOfArray(statePropertyKey):** This method removes an item from the beginning of an existing array.
 
 - **removeArrayItemFromEndOfArray(statePropertyKey):** This method removes an item from the end of an existing array.

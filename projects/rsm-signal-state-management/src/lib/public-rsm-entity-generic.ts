@@ -60,7 +60,6 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     item: StatesModel[K] extends Array<infer U> ? U : never
   ): void {
     const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-    console.log(currentValue?.length, index)
     if (index >= 0 && index <= currentValue?.length) {
       // Insert the item at the specified index and update the state.
       const newArray = [...currentValue];
@@ -88,7 +87,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     subArray: Array<StatesModel[K] extends Array<infer U> ? U : never>
   ): void {
     const currentValue = this.store().state[statePropertyKey];
-  
+
     if (Array.isArray(currentValue)) {
       // Concatenate the subarray to the end of the array and update the state.
       this.setStatePropertyByKey(statePropertyKey, [...currentValue, ...subArray] as StatesModel[K]);
@@ -110,6 +109,22 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
     }
   }
+
+  // Update an item of an array property at a specific index.
+  public updateItemTOfArrayAtIndex<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    index: number,
+    item: StatesModel[K] extends Array<infer U> ? U : never
+  ): void {
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    if (index >= 0 && index <= currentValue?.length) {
+      // Update the item at the specified index and update the state.
+      const newArray = [...currentValue];
+      newArray[index] = item;
+      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+    }
+  }
+
   /*TODO return removed item*/
   // Remove the first item from an array property.
   public removeArrayItemFromStartOfArray<K extends keyof StatesModel>(
@@ -122,6 +137,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       this.setStatePropertyByKey(statePropertyKey, currentValue.slice(1) as StatesModel[K]);
     }
   }
+
   /*TODO return removed item*/
   // Remove the last item from an array property.
   public removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
@@ -134,6 +150,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       this.setStatePropertyByKey(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
     }
   }
+
   /*TODO return removed item*/
   // Remove items from an array property starting at a specific index.
   public removeArrayItemsFromIndex<K extends keyof StatesModel>(
@@ -150,6 +167,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
       ] as StatesModel[K]);
     }
   }
+  
   /*TODO return removed item and implement removing all the items with the met conditions*/
   // Remove an item from an array property by its ID.
   public removeArrayItemByPropertyValue<K extends keyof StatesModel>(

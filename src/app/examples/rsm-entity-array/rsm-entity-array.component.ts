@@ -62,7 +62,6 @@ export class RsmEntityArrayComponent {
   }
 
   removeArrayItemsFromIndex() {
-    console.log(this.removingItemsIndexNumber,this.removingItemsCountNumber)
     this.rsmEntityStoreService.removeArrayItemsFromIndex('arraySample', this.removingItemsIndexNumber, this.removingItemsCountNumber);
   }
   

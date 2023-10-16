@@ -110,6 +110,22 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
     }
   }
+
+  // Update an item of an array property at a specific index.
+  protected updateItemTOfArrayAtIndex<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    index: number,
+    item: StatesModel[K] extends Array<infer U> ? U : never
+  ): void {
+    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
+    if (index >= 0 && index <= currentValue?.length) {
+      // Update the item at the specified index and update the state.
+      const newArray = [...currentValue];
+      newArray[index] = item;
+      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+    }
+  }
+
   /*TODO return removed item*/
   // Remove an item from the start of an array property.
   protected removeArrayItemFromStartOfArray<K extends keyof StatesModel>(
@@ -122,6 +138,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       this.setStatePropertyByKey(statePropertyKey, currentValue.slice(1) as StatesModel[K]);
     }
   }
+
   /*TODO return removed item*/
   // Remove an item from the end of an array property.
   protected removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
@@ -134,6 +151,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       this.setStatePropertyByKey(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
     }
   }
+
   /*TODO return removed item*/
   // Remove a range of items from an array property starting from a specific index.
   protected removeArrayItemsFromIndex<K extends keyof StatesModel>(
@@ -151,6 +169,7 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       ] as StatesModel[K]);
     }
   }
+  
   /*TODO return removed item and implement removing all the items with the met conditions*/
   // Remove an array item by comparing a property value.
   protected removeArrayItemByPropertyValue<K extends keyof StatesModel>(
