@@ -528,6 +528,24 @@ this.userStoreService.addItemToEndOfArray('products', product); // product must 
 
 - **addSubArrayAtIndex(statePropertyKey, index, subArray):** This method inserts a sub-array at a specific index within an existing array.
 
+- **updateItemOfArrayAtIndex(statePropertyKey, index, item):** This method updates an item at a specific index within an existing array.
+
+- **updateArrayItemByPropertyValue(statePropertyKey, updatePropertyKey, updatePropertyValue, updateItem):** This method updates an item from an existing array that has a property key with a certain value.
+```typescript
+interface UserProfile {
+  username: string;
+  firstName: string;
+}
+interface UserState {
+  users: UserProfile
+}
+
+const updateUser: UserProfile = {
+  username: 'test',
+  firstName: 'test name'
+}
+this.userStoreService.updateArrayItemByPropertyValue('users','username','john', updateUser);
+```
 - **removeArrayItemFromStartOfArray(statePropertyKey):** This method removes an item from the beginning of an existing array.
 
 - **removeArrayItemFromEndOfArray(statePropertyKey):** This method removes an item from the end of an existing array.
