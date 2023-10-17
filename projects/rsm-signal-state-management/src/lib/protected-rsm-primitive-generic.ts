@@ -45,7 +45,7 @@ export class ProtectedRsmPrimitiveGenericClass<StatesModel extends object> {
   }
 
   // Set all state properties from an object with new values.
-  public setAllStateProperties(allStatesData: StatesModel): void {
+  protected setAllStateProperties(allStatesData: StatesModel): void {
     const keys = Object.keys(allStatesData) as Array<keyof StatesModel>;
     this.privateState.update((currentValue) => ({
       ...currentValue,

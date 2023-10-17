@@ -34,10 +34,10 @@ export class ProtectedRsmStackGenericClass<StatesModel extends object> extends P
   // Push an item onto an array property (push onto the stack).
   protected pushItemToStack<K extends keyof StatesModel>(
     statePropertyKey: K,
-    item: StatesModel[K] extends Array<infer U> ? U : never
+    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
   ): void {
     const currentValue = this.store().state[statePropertyKey];
-    if (Array.isArray(currentValue)) {
+    if (item && Array.isArray(currentValue)) {
       // Add the item to the end of the array and update the state.
       this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
     }
