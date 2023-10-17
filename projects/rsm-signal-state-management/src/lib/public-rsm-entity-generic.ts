@@ -126,7 +126,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
   }
 
   // Update an item from an array property by its property key and value.
-  protected updateArrayItemByPropertyValue<K extends keyof StatesModel>(
+  public updateArrayItemByPropertyValue<K extends keyof StatesModel>(
     statePropertyKey: K,
     updatePropertyKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     updatePropertyValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never,
@@ -202,6 +202,7 @@ export class PublicRsmEntityGenericClass<StatesModel extends object> extends Pub
     if (Array.isArray(currentValue)) {
       // Filter out the item with the matching property key and value and update the state.
       const updatedArray = currentValue.filter((item: StatesModel[K] extends Array<infer U> ? U : never) => {
+        console.log(item, removePropertyKey,'HHHHHHHHHHHHHHHHHHHHH');
         return item[removePropertyKey] != removePropertyValue;
       }) as StatesModel[K];
       this.setStatePropertyByKey(statePropertyKey, updatedArray);
