@@ -22,11 +22,11 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
   // Add an item to the start of an array property (enqueue).
   private addItemToStartOfArray<K extends keyof StatesModel>(
     statePropertyKey: K,
-    item: StatesModel[K] extends Array<infer U> ? U : never
+    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
   ): void {
     const currentValue = this.store().state[statePropertyKey];
 
-    if (Array.isArray(currentValue)) {
+    if (item && Array.isArray(currentValue)) {
       // Add the item to the start of the array and update the state.
       this.setStatePropertyByKey(statePropertyKey, [item, ...currentValue] as StatesModel[K]);
     }
@@ -68,10 +68,10 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
 
   private addItemToStartOfQueue<K extends keyof StatesModel>(
     statePropertyKey: K,
-    item: StatesModel[K] extends Array<infer U> ? U : never
+    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
   ): void {
     const currentValue = this.store().state[statePropertyKey];
-    if (Array.isArray(currentValue)) {
+    if (item && Array.isArray(currentValue)) {
       this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
     }
   }
@@ -81,7 +81,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
     statePropertyKey: K,
     priorityKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     priorityOrder: 'smaller-higher' | 'bigger-higher',
-    item: StatesModel[K] extends Array<infer U> ? U : never
+    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
   ): void {
     const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     if (Array.isArray(currentValue)) {
@@ -91,7 +91,7 @@ export class PublicRsmQueueGenericClass<StatesModel extends object> extends Publ
         }
         return -1;
       }));
-      if (insertionIndex >= 0) {
+      if (item && insertionIndex >= 0) {
         // Insert the item at the specified index and update the state.
         const newArray = [...currentValue];
         newArray.splice(insertionIndex, 0, item);
