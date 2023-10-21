@@ -2,7 +2,7 @@ import { signal, computed, Signal, WritableSignal } from '@angular/core';
 
 interface Action {
   type: string;
-  payload: any;
+  payload?: any;
 }
 
 // Define a type for the store state with keys to track changes.
