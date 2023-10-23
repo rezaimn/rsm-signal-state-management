@@ -31,9 +31,9 @@ export class ProtectedRsmActionsGeneric <ActionTypes extends Action> {
 
   // Dispatch a new action.
   protected dispatchNewAction<T extends ActionTypes>(action: T) {
-    this.privateState.update((currentValue) => ({
+    setTimeout(() => this.privateState.update((currentValue) => ({
       ...currentValue,
       action
-    }));
+    })),0);
   }
 }
