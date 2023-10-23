@@ -1,7 +1,7 @@
 
 import { Component, inject, Signal } from '@angular/core';
 import { DelayedDecrement, DelayedIncrement } from 'src/app/store/actions/rsm-actions';
-import { RsmPrimitiveEffectsService } from 'src/app/store/effects/rsm-primitive-effect.service';
+// import { RsmPrimitiveEffectsService } from 'src/app/store/effects/rsm-primitive-effect.service';
 import { RsmActionsService } from 'src/app/store/services/rsm-action.service';
 import { RsmPrimitiveStoreService } from 'src/app/store/services/rsm-primitive-store.service';
 
@@ -13,7 +13,7 @@ import { RsmPrimitiveStoreService } from 'src/app/store/services/rsm-primitive-s
 export class RsmPrimitiveComponent {
   rsmPrimitiveStoreService = inject(RsmPrimitiveStoreService);
   rsmActionsService = inject(RsmActionsService);
-  rsmPrimitiveEffectsService = inject(RsmPrimitiveEffectsService);
+  // rsmPrimitiveEffectsService = inject(RsmPrimitiveEffectsService);
   counterCurrentValue: Signal<number> = this.rsmPrimitiveStoreService.select('counter');
   textCurrentValue: Signal<string> = this.rsmPrimitiveStoreService.select('text');
 

@@ -8,6 +8,8 @@ import { RsmStackComponent } from './examples/rsm-stack/rsm-stack.component';
 import { RsmEntityArrayComponent } from './examples/rsm-entity-array/rsm-entity-array.component';
 import { RsmEntityObjectComponent } from './examples/rsm-entity-object/rsm-entity-object.component';
 import { AppRoutingModule } from './app.routing.module';
+import { RsmEffectsModule } from 'projects/rsm-signal-state-management/src/lib/modules/rsm-effects.module';
+import { RsmPrimitiveEffectsService } from './store/effects/rsm-primitive-effect.service';
 
 
 @NgModule({
@@ -21,7 +23,8 @@ import { AppRoutingModule } from './app.routing.module';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RsmEffectsModule.forRoot(RsmPrimitiveEffectsService)
   ],
   providers: [],
   bootstrap: [AppComponent]
