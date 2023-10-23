@@ -12,3 +12,4 @@ export * from './lib/public-rsm-entity-generic';
 export * from './lib/protected-rsm-primitive-generic';
 export * from './lib/public-rsm-actions-generic';
 export * from './lib/protected-rsm-actions-generic';
+export { RsmEffectsModule } from './lib/modules/rsm-effects.module';

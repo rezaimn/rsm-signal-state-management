@@ -479,7 +479,15 @@ export class UserEffectsService{
   }
 }
 ```
+You need to add the effect services into the app module's imports like below
+```typescript
+RsmEffectsModule.forRoot(UserEffectsService)
+```
+Or add it to the provider of standalone app like this:
 
+```typescript
+importProvidersFrom(RSMEffectsModule.forRoot(UserEffectsService))
+```
 ## API Documentation
 
 ### 1. Primitive State Manager
