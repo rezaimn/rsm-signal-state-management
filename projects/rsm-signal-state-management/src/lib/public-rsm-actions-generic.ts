@@ -34,7 +34,7 @@ export class PublicRsmActionsGeneric <ActionTypes extends Action> {
     setTimeout(() => this.privateState.update((currentValue) => ({
       ...currentValue,
       action
-    })),0);
+    })), 0);
   }
 
   
