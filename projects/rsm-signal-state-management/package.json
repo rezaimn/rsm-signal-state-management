@@ -1,6 +1,6 @@
 {
   "name": "rsm-signal-state-management",
-  "version": "1.2.17",
+  "version": "1.2.18",
   "peerDependencies": {
     "@angular/common": "~16.1.0",
     "@angular/core": "~16.1.0"
