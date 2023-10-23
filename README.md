@@ -463,14 +463,14 @@ export class UserEffectsService{
     effect(() => {
       switch(action().type) {
         case UserActionsEnum.AddNewUser: {
-         this.http.post('url',action().payload).subscribe(() =>{
-            this.userStoreService.addItemToEndOfArray('users', action().payload);
+         this.http.post('url',action().payload).subscribe((user: User) =>{
+            this.userStoreService.addItemToEndOfArray('users', user);
           })
           break;
         }
         case RsmPrimitiveEnum.RemoveUser: {
-          this.http.delete('url',action().payload.userId).subscribe(() =>{
-            this.userStoreService.removeArrayItemByPropertyValue('users','id' action().payload.id);
+          this.http.delete('url',action().payload.userId).subscribe((user: User) =>{
+            this.userStoreService.removeArrayItemByPropertyValue('users','id', user.id);
           })
           break;
         }
