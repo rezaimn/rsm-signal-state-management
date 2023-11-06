@@ -66,7 +66,7 @@ export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
 
   // Constructor to initialize the state with initial values.
   constructor(initialValues: StatesModel) {
-    this.setAllStateProperties(initialValues); // Set initial state
+    this.setAllStates(initialValues); // Set initial state
   }
 
   // Select a specific property from the state.
@@ -107,7 +107,7 @@ export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
 
 
   // Set all properties in the store. 
-  public setAllStateProperties(allStates: StatesModel): void {
+  public setAllStates(allStates: StatesModel): void {
     const keys = Object.keys(allStates) as Array<keyof StatesModel>;
     this.privateState.update((currentValue) => ({
       ...currentValue,
@@ -304,7 +304,7 @@ updateUserProfile(userProfile: UserProfile) {
 }
 
 removeUserById(userId: string) {
-  this.usersStoreService.removeFromArrayByKey('users', 'id', userId);
+  this.usersStoreService.removeFromArrayByProperty('users', 'id', userId);
 }
 ```
 
@@ -551,7 +551,7 @@ this.userStoreService.updateArrayItemByProperty('users','username','john', updat
 
 - **removeFromArrayByIndex(statePropertyKey, index, deleteCount):** This method removes some array items from a specific index.
 
-- **removeFromArrayByKey(statePropertyKey, removePropertyKey, removePropertyValue):** This method removes an item from an existing array that has a property key with a certain value.
+- **removeFromArrayByProperty(statePropertyKey, removePropertyKey, removePropertyValue):** This method removes an item from an existing array that has a property key with a certain value.
 ```typescript
 interface UserProfile {
   username: string;
@@ -563,11 +563,11 @@ interface UserProfile {
 interface UserState {
   users: UserProfile
 }
-this.userStoreService.removeFromArrayByKey('users','username','john');
+this.userStoreService.removeFromArrayByProperty('users','username','john');
 //or
-this.userStoreService.removeFromArrayByKey('users','age',12);
+this.userStoreService.removeFromArrayByProperty('users','age',12);
 ```
-- **getArrayItemByPropertyValue(statePropertyKey, compareKey, compareValue):** Retrieve the item with a certain key value in an existing array.
+- **getArrayItemByProperty(statePropertyKey, compareKey, compareValue):** Retrieve the item with a certain key value in an existing array.
 
 ### 3. Queue State Manager
 
