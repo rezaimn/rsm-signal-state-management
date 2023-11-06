@@ -18,16 +18,16 @@ export class RsmEntityObjectComponent {
   
   
   addNewObject() {
-    this.rsmEntityStoreService.setStatePropertyByKey('objectSample', this.userObject);
+    this.rsmEntityStoreService.updateState('objectSample', this.userObject);
   }
 
   updatePartially() {
-    this.rsmEntityStoreService.updateExistingObjectPartiallyByPropertyKey('objectSample', this.userObject);
+    this.rsmEntityStoreService.updateState('objectSample', this.userObject);
   }
 
   removeObject() {
     this.userObject = { ...initialObject };
-    this.rsmEntityStoreService.setStatePropertyByKey('objectSample', this.userObject);
+    this.rsmEntityStoreService.updateState('objectSample', this.userObject);
   }
 
   changeFirstName(event: any) {

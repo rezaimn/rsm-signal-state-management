@@ -19,15 +19,15 @@ export class RsmEntityArrayComponent {
   removingItemPropertyValue: any;
 
   addItemToStartOfArray() {
-    this.rsmEntityStoreService.addItemToStartOfArray('arraySample', generateRandomObject());
+    this.rsmEntityStoreService.addToArray('arraySample', generateRandomObject(), 'start');
   }
 
   addItemToEndOfArray() {
-    this.rsmEntityStoreService.addItemToEndOfArray('arraySample', generateRandomObject());
+    this.rsmEntityStoreService.addToArray('arraySample', generateRandomObject(), 'end');
   }
 
   addItemToArrayAtIndex() {
-    this.rsmEntityStoreService.addItemToArrayAtIndex('arraySample', this.addingItemIndexNumber, generateRandomObject());
+    this.rsmEntityStoreService.addToArray('arraySample', generateRandomObject(), this.addingItemIndexNumber);
   }
 
   changeAddItemIndexNumber(event: any) {
@@ -36,17 +36,17 @@ export class RsmEntityArrayComponent {
 
   addSubArrayToStart() {
     const subArray: ArrayModel[] = [generateRandomObject(), generateRandomObject(), generateRandomObject()];
-    this.rsmEntityStoreService.addSubArrayToStart('arraySample', subArray);
+    this.rsmEntityStoreService.addToArray('arraySample', subArray, 'start');
   }
 
   addSubArrayToEnd() {
     const subArray: ArrayModel[] = [generateRandomObject(), generateRandomObject(), generateRandomObject()];
-    this.rsmEntityStoreService.addSubArrayToEnd('arraySample', subArray);
+    this.rsmEntityStoreService.addToArray('arraySample', subArray, 'end');
   }
 
   addSubArrayAtIndex() {
     const subArray: ArrayModel[] = [generateRandomObject(), generateRandomObject(), generateRandomObject()];
-    this.rsmEntityStoreService.addSubArrayAtIndex('arraySample', this.addingSubArrayIndexNumber, subArray);
+    this.rsmEntityStoreService.addToArray('arraySample', subArray, this.addingSubArrayIndexNumber);
   }
 
   changeAddSubArrayIndexNumber(event: any) {
@@ -54,15 +54,15 @@ export class RsmEntityArrayComponent {
   }
   
   removeArrayItemFromStartOfArray() {
-    this.rsmEntityStoreService.removeArrayItemFromStartOfArray('arraySample');
+    this.rsmEntityStoreService.removeFromArrayByIndex('arraySample', 'start');
   }
 
   removeArrayItemFromEndOfArray() {
-    this.rsmEntityStoreService.removeArrayItemFromEndOfArray('arraySample');
+    this.rsmEntityStoreService.removeFromArrayByIndex('arraySample', 'end');
   }
 
   removeArrayItemsFromIndex() {
-    this.rsmEntityStoreService.removeArrayItemsFromIndex('arraySample', this.removingItemsIndexNumber, this.removingItemsCountNumber);
+    this.rsmEntityStoreService.removeFromArrayByIndex('arraySample', this.removingItemsIndexNumber, this.removingItemsCountNumber);
   }
   
   changeRemoveItemsIndexNumber(event: any) {
@@ -74,7 +74,7 @@ export class RsmEntityArrayComponent {
   }
 
   removeArrayItemByPropertyValue() {
-    this.rsmEntityStoreService.removeArrayItemByPropertyValue('arraySample', this.removingItemPropertyName, this.removingItemPropertyValue);
+    this.rsmEntityStoreService.removeFromArrayByProperty('arraySample', this.removingItemPropertyName, this.removingItemPropertyValue);
   }
 
   changeRemoveItemPropertyName(event: any) {

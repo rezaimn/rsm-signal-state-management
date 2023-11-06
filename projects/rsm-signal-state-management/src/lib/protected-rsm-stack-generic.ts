@@ -18,28 +18,15 @@ export class ProtectedRsmStackGenericClass<StatesModel extends object> extends P
       return array.length;
     });
   }
-
-  // Remove an item from the end of an array property (pop from the stack).
-  private removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
-    statePropertyKey: K
-  ): void {
-    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    if (Array.isArray(currentValue) && currentValue.length > 0) {
-      // Remove the last item from the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
-    }
-  }
-
   // Push an item onto an array property (push onto the stack).
-  protected pushItemToStack<K extends keyof StatesModel>(
+  protected pushToStack<K extends keyof StatesModel>(
     statePropertyKey: K,
     item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
   ): void {
     const currentValue = this.store().state[statePropertyKey];
     if (item && Array.isArray(currentValue)) {
       // Add the item to the end of the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
+      this.updateState(statePropertyKey, [...currentValue, item] as StatesModel[K]);
     }
   }
 
@@ -48,10 +35,10 @@ export class ProtectedRsmStackGenericClass<StatesModel extends object> extends P
     statePropertyKey: K
   ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
     const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-    if(currentValue?.length > 0) {
+    if(Array.isArray(currentValue) && currentValue?.length > 0) {
       // Remove and return the last item from the array.
       const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];
-      this.removeArrayItemFromEndOfArray(statePropertyKey);
+      this.updateState(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
       return removedItem;
     }
     return null;
