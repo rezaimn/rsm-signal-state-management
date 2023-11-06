@@ -22,7 +22,7 @@ export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
 
   // Constructor to initialize the state with initial values.
   constructor(initialValues: StatesModel) {
-    this.setAllStateProperties(initialValues); // Set initial state
+    this.setAllStates(initialValues); // Set initial state
   }
 
   // Select a specific property from the state.
@@ -35,8 +35,22 @@ export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
     return this.privateState().state;
   });
 
-  // Set a state property in the store. you need to pass the statePropertyKey that shows which state property you wish to update, and the data which is the updating value for that state property
-  public setStatePropertyByKey<K extends keyof StatesModel>(statePropertyKey: K, data: StatesModel[K]) {
+  // Method overloads to support different use cases
+  public updateState<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    data: StatesModel[K]
+  ): void;
+  
+  public updateState<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    data: Partial<StatesModel>[K]
+  ): void;
+
+  // Implementation combining the logic of both previous functions
+  public updateState<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    data: StatesModel[K] | Partial<StatesModel>[K]
+  ): void {
     const objectType = Object.prototype.toString.call(data);
     this.privateState.update((currentValue) => ({
       ...currentValue,
@@ -46,7 +60,7 @@ export class PublicRsmPrimitiveGenericClass<StatesModel extends object> {
   }
 
   // Set all properties in the store. 
-  public setAllStateProperties(allStates: StatesModel): void {
+  public setAllStates(allStates: StatesModel): void {
     const keys = Object.keys(allStates) as Array<keyof StatesModel>;
     this.privateState.update((currentValue) => ({
       ...currentValue,

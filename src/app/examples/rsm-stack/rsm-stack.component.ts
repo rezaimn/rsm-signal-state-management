@@ -15,7 +15,7 @@ export class RsmStackComponent {
   poppedItem: StackModel | null = null;
 
   pushItemToTheStack() {
-    this.rsmStackStoreService.pushItemToStack('stack', generateRandomObject());
+    this.rsmStackStoreService.pushToStack('stack', generateRandomObject());
   }
 
   popItemFromStack() {

@@ -18,11 +18,11 @@ export class RsmPrimitiveComponent {
   textCurrentValue: Signal<string> = this.rsmPrimitiveStoreService.select('text');
 
   increment() {
-    this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', this.counterCurrentValue() + 1);
+    this.rsmPrimitiveStoreService.updateState('counter', this.counterCurrentValue() + 1);
   }
 
   decrement() {
-    this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', this.counterCurrentValue() - 1);
+    this.rsmPrimitiveStoreService.updateState('counter', this.counterCurrentValue() - 1);
   }
 
   delayedIncrement() {
@@ -34,10 +34,10 @@ export class RsmPrimitiveComponent {
   }
 
   resetCounter() {
-    this.rsmPrimitiveStoreService.setStatePropertyByKey('counter', 0);
+    this.rsmPrimitiveStoreService.updateState('counter', 0);
   }
 
   textChange(event: any){
-    this.rsmPrimitiveStoreService.setStatePropertyByKey('text', event.target.value);
+    this.rsmPrimitiveStoreService.updateState('text', event.target.value);
   }
 }

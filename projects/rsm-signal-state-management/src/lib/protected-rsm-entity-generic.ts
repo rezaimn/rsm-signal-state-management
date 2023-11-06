@@ -19,100 +19,46 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
     });
   }
 
-  // Update an Object property partially by key and data.
-  protected updateExistingObjectPartiallyByPropertyKey<K extends keyof StatesModel>(statePropertyKey: K, data: Partial<StatesModel>[K]) {
-    const objectType = Object.prototype.toString.call(data);
-    const currentValue = this.store().state[statePropertyKey];
-    if (objectType === '[object Object]') {
-      this.setStatePropertyByKey(statePropertyKey, { ...currentValue, ...data });
-    }
-  }
-
-  // Add an item to the end of an array property.
-  protected addItemToEndOfArray<K extends keyof StatesModel>(
+  // Method overloads to support different use cases
+  protected addToArray<K extends keyof StatesModel>(
     statePropertyKey: K,
-    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
-  ): void {
-    const currentValue = this.store().state[statePropertyKey];
-    if (item && Array.isArray(currentValue)) {
-      // Add the item to the end of the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
-    }
-  }
-  
-  // Add an item to the start of an array property.
-  protected addItemToStartOfArray<K extends keyof StatesModel>(
-    statePropertyKey: K,
-    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
-  ): void {
-    const currentValue = this.store().state[statePropertyKey];
+    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null,
+    index: number | 'start' | 'end'
+  ): void;
 
-    if (item && Array.isArray(currentValue)) {
-      // Add the item to the start of the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, [item, ...currentValue] as StatesModel[K]);
-    }
-  }
-
-  // Add an item to an array property at a specific index.
-  protected addItemToArrayAtIndex<K extends keyof StatesModel>(
+  protected addToArray<K extends keyof StatesModel>(
     statePropertyKey: K,
-    index: number,
-    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
+    subArray: (Array<StatesModel[K] extends Array<infer U> ? U : never>) | undefined | null,
+    index: number | 'start' | 'end'
+  ): void;
+
+  // Implementation combining the logic of both previous functions
+  protected addToArray<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    data: ((StatesModel[K] extends Array<infer U> ? U : never) | undefined | null) | (Array<StatesModel[K] extends Array<infer U> ? U : never> | undefined | null),
+    index: number | 'start' | 'end'
   ): void {
     const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    if (item && index >= 0 && index <= currentValue?.length) {
-      // Insert the item at the specified index and update the state.
-      const newArray = [...currentValue];
-      newArray.splice(index, 0, item);
-      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+    if (data && Array.isArray(currentValue)) {
+      index = index === 'end' ? currentValue.length : index === 'start' ? 0 : index;
+      if (!Array.isArray(data)) {
+        data = [data];
+      }
+      if (data && index >= 0 && index <= currentValue?.length) {
+        // Insert the item at the specified index and update the state.
+        let newArray = [...currentValue];
+        newArray = [
+          ...currentValue.slice(0, index), // Elements before the insertion point
+          ...data, // Subarray to be inserted
+          ...currentValue.slice(index) // Elements after the insertion point
+        ];
+        this.updateState(statePropertyKey, newArray as StatesModel[K]);
+      }
     }
   }
-
-  // Add a subarray to the start of an array property.
-  protected addSubArrayToStart<K extends keyof StatesModel>(
-    statePropertyKey: K,
-    subArray: (Array<StatesModel[K] extends Array<infer U> ? U : never>) | undefined | null
-  ): void {
-    const currentValue = this.store().state[statePropertyKey];
-  
-    if (subArray && Array.isArray(currentValue)) {
-      // Add the subarray to the start of the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, [...subArray, ...currentValue] as StatesModel[K]);
-    }
-  }
-
-  // Add a subarray to the end of an array property.
-  protected addSubArrayToEnd<K extends keyof StatesModel>(
-    statePropertyKey: K,
-    subArray: (Array<StatesModel[K] extends Array<infer U> ? U : never>) | undefined | null
-  ): void {
-    const currentValue = this.store().state[statePropertyKey];
-  
-    if (subArray && Array.isArray(currentValue)) {
-      // Add the subarray to the end of the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, [...currentValue, ...subArray] as StatesModel[K]);
-    }
-  }
-
-  // Add a subarray to an array property at a specific index.
-  protected addSubArrayAtIndex<K extends keyof StatesModel>(
-    statePropertyKey: K,
-    index: number,
-    subArray: (Array<StatesModel[K] extends Array<infer U> ? U : never>) | undefined | null
-  ): void {
-    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    if (subArray && index >= 0 && index <= currentValue?.length) {
-      // Insert the subarray at the specified index and update the state.
-      const newArray = [...currentValue];
-      newArray.splice(index, 0, ...subArray);
-      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
-    }
-  }
-
+ 
   // Update an item of an array property at a specific index.
-  protected updateItemTOfArrayAtIndex<K extends keyof StatesModel>(
+  protected updateArrayItemByIndex<K extends keyof StatesModel>(
     statePropertyKey: K,
     index: number,
     item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
@@ -122,12 +68,12 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       // Update the item at the specified index and update the state.
       const newArray = [...currentValue];
       newArray[index] = item;
-      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+      this.updateState(statePropertyKey, newArray as StatesModel[K]);
     }
   }
 
   // Update an item from an array property by its property key and value.
-  protected updateArrayItemByPropertyValue<K extends keyof StatesModel>(
+  protected updateArrayItemByProperty<K extends keyof StatesModel>(
     statePropertyKey: K,
     updatePropertyKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     updatePropertyValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never,
@@ -144,48 +90,22 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
       if(updateItem && updateIndex >= 0){
         newArray[updateIndex] = updateItem;
       }
-      this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+      this.updateState(statePropertyKey, newArray as StatesModel[K]);
     }
   }
 
   /*TODO return removed item*/
-  // Remove an item from the start of an array property.
-  protected removeArrayItemFromStartOfArray<K extends keyof StatesModel>(
-    statePropertyKey: K
-  ): void {
-    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    if (currentValue?.length > 0) {
-      // Remove the first item from the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, currentValue.slice(1) as StatesModel[K]);
-    }
-  }
-
-  /*TODO return removed item*/
-  // Remove an item from the end of an array property.
-  protected removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
-    statePropertyKey: K
-  ): void {
-    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    if (currentValue?.length > 0) {
-      // Remove the last item from the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
-    }
-  }
-
-  /*TODO return removed item*/
-  // Remove a range of items from an array property starting from a specific index.
-  protected removeArrayItemsFromIndex<K extends keyof StatesModel>(
+  // Remove items from an array property starting at a specific index.
+  protected removeFromArrayByIndex<K extends keyof StatesModel>(
     statePropertyKey: K,
-    index: number,
-    deleteCount: number
+    index: number | 'start' | 'end',
+    deleteCount: number = 1
   ): void {
     const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
+    index = index === 'end' ? currentValue.length -1 : index === 'start' ? 0 : index;
     if (index >= 0 && index < currentValue?.length && index + deleteCount <= currentValue?.length) {
-      // Remove items from the array based on the index and count, then update the state.
-      this.setStatePropertyByKey(statePropertyKey, [
+      // Remove items from the specified index and update the state.
+      this.updateState(statePropertyKey, [
         ...currentValue.slice(0, index),
         ...currentValue.slice(index + deleteCount),
       ] as StatesModel[K]);
@@ -193,8 +113,8 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
   }
 
   /*TODO return removed item and implement removing all the items with the met conditions*/
-  // Remove an array item by comparing a property value.
-  protected removeArrayItemByPropertyValue<K extends keyof StatesModel>(
+  // Remove an item from an array property by its property key and value.
+  protected removeFromArrayByProperty<K extends keyof StatesModel>(
     statePropertyKey: K,
     removePropertyKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     removePropertyValue: StatesModel[K] extends Array<infer U> ? U[keyof U] : never
@@ -202,16 +122,16 @@ export class ProtectedRsmEntityGenericClass<StatesModel extends object> extends 
     const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
 
     if (Array.isArray(currentValue)) {
-      // Filter out items based on the specified property value and update the state.
+      // Filter out the item with the matching property key and value and update the state.
       const updatedArray = currentValue.filter((item: StatesModel[K] extends Array<infer U> ? U : never) => {
         return item[removePropertyKey] != removePropertyValue;
       }) as StatesModel[K];
-      this.setStatePropertyByKey(statePropertyKey, updatedArray);
+      this.updateState(statePropertyKey, updatedArray);
     }
   }
 
   // Find and return an array item by comparing a property value.
-  protected getArrayItemByPropertyValue<K extends keyof StatesModel>(
+  protected getArrayItemByProperty<K extends keyof StatesModel>(
     statePropertyKey: K,
     removeKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     itemId: StatesModel[K] extends Array<infer U> ? U[keyof U] : never

@@ -16,18 +16,18 @@ export class RsmQueueComponent {
   selectedPriorityQueueItem: PriorityQueueModel | null = null;
 
   addItemToTheQueue() {
-    this.rsmQueueStoreService.addItemToQueue('simpleQueue', generateRandomObject());
+    this.rsmQueueStoreService.addToQueue('simpleQueue', generateRandomObject());
   }
 
   removeItemFromQueue() {
-    this.selectedSimpleQueueItem = this.rsmQueueStoreService.removeItemFromQueue('simpleQueue');
+    this.selectedSimpleQueueItem = this.rsmQueueStoreService.removeFromQueue('simpleQueue');
   }
 
   addItemToThePriorityQueue() {
-    this.rsmQueueStoreService.addItemToPriorityQueueByPriorityKey('priorityQueue','priority','smaller-higher',generateRandomPriorityObject());
+    this.rsmQueueStoreService.addToPriorityQueue('priorityQueue','priority','smaller-higher',generateRandomPriorityObject());
   }
 
   removeItemFromPriorityQueue() {
-    this.selectedPriorityQueueItem = this.rsmQueueStoreService.removeItemFromQueue('priorityQueue');
+    this.selectedPriorityQueueItem = this.rsmQueueStoreService.removeFromQueue('priorityQueue');
   }
 }

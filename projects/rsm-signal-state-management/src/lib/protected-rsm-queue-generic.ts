@@ -19,8 +19,8 @@ export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends P
     });
   }
 
-  // Add an item to the start of an array property (enqueue).
-  private addItemToStartOfArray<K extends keyof StatesModel>(
+  // Add an item to the start of the queue.
+  protected addToQueue<K extends keyof StatesModel>(
     statePropertyKey: K,
     item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
   ): void {
@@ -28,56 +28,27 @@ export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends P
 
     if (item && Array.isArray(currentValue)) {
       // Add the item to the start of the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, [item, ...currentValue] as StatesModel[K]);
+      this.updateState(statePropertyKey, [item, ...currentValue] as StatesModel[K]);
     }
-  }
-
-  // Remove an item from the end of an array property (dequeue).
-  private removeArrayItemFromEndOfArray<K extends keyof StatesModel>(
-    statePropertyKey: K
-  ): void {
-    const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
-
-    if (currentValue?.length > 0) {
-      // Remove the last item from the array and update the state.
-      this.setStatePropertyByKey(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
-    }
-  }
-
-  // Add an item to the start of the queue.
-  protected addItemToQueue<K extends keyof StatesModel>(
-    statePropertyKey: K,
-    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
-  ): void {
-    this.addItemToStartOfArray(statePropertyKey, item);
   }
 
   // Remove an item from the start of the queue.
-  protected removeItemFromQueue<K extends keyof StatesModel>(
+  protected removeFromQueue<K extends keyof StatesModel>(
     statePropertyKey: K
   ): (StatesModel[K] extends Array<infer U> ? U : null) | null {
     const currentValue = this.store().state[statePropertyKey] as Array<StatesModel[K] extends Array<infer U> ? U : never>;
     if(currentValue?.length > 0) {
       // Remove and return the first item from the array.
       const removedItem: StatesModel[K] extends Array<infer U> ? U : null = currentValue[currentValue.length - 1];
-      this.removeArrayItemFromEndOfArray(statePropertyKey);
+      // Remove the last item from the array and update the state.
+      this.updateState(statePropertyKey, currentValue.slice(0, -1) as StatesModel[K]);
       return removedItem;
     }
     return null;
   }
 
-  private addItemToStartOfQueue<K extends keyof StatesModel>(
-    statePropertyKey: K,
-    item: (StatesModel[K] extends Array<infer U> ? U : never) | undefined | null
-  ): void {
-    const currentValue = this.store().state[statePropertyKey];
-    if (item && Array.isArray(currentValue)) {
-      this.setStatePropertyByKey(statePropertyKey, [...currentValue, item] as StatesModel[K]);
-    }
-  }
-
   // Add an item to the queue at a specific index (insertion).
-  protected addItemToPriorityQueueByPriorityKey<K extends keyof StatesModel>(
+  protected addToPriorityQueue<K extends keyof StatesModel>(
     statePropertyKey: K,
     priorityKey: StatesModel[K] extends Array<infer U> ? keyof U : never,
     priorityOrder: 'smaller-higher' | 'bigger-higher',
@@ -95,9 +66,9 @@ export class ProtectedRsmQueueGenericClass<StatesModel extends object> extends P
         // Insert the item at the specified index and update the state.
         const newArray = [...currentValue];
         newArray.splice(insertionIndex, 0, item);
-        this.setStatePropertyByKey(statePropertyKey, newArray as StatesModel[K]);
+        this.updateState(statePropertyKey, newArray as StatesModel[K]);
       } else {
-        this.addItemToStartOfQueue(statePropertyKey, item);
+        this.updateState(statePropertyKey, [...currentValue, item] as StatesModel[K]);
       }
     }
   }

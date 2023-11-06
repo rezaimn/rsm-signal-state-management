@@ -26,7 +26,7 @@ export class ProtectedRsmPrimitiveGenericClass<StatesModel extends object> {
   
   // Constructor to initialize the state with initial values.
   constructor(initialValues: StatesModel) {
-    this.setAllStateProperties(initialValues); // Set the initial state
+    this.setAllStates(initialValues); // Set the initial state
   }
 
   // Select a specific property from the state.
@@ -34,8 +34,22 @@ export class ProtectedRsmPrimitiveGenericClass<StatesModel extends object> {
     return computed(() => this.privateState().state[statePropertyKey]);
   }
 
-  // Set a single state property by key and data.
-  protected setStatePropertyByKey<K extends keyof StatesModel>(statePropertyKey: K, data: StatesModel[K]) {
+  // Method overloads to support different use cases
+  protected updateState<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    data: StatesModel[K]
+  ): void;
+  
+  protected updateState<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    data: Partial<StatesModel>[K]
+  ): void;
+
+  // Implementation combining the logic of both previous functions
+  protected updateState<K extends keyof StatesModel>(
+    statePropertyKey: K,
+    data: StatesModel[K] | Partial<StatesModel>[K]
+  ): void {
     const objectType = Object.prototype.toString.call(data);
     this.privateState.update((currentValue) => ({
       ...currentValue,
@@ -45,7 +59,7 @@ export class ProtectedRsmPrimitiveGenericClass<StatesModel extends object> {
   }
 
   // Set all state properties from an object with new values.
-  protected setAllStateProperties(allStatesData: StatesModel): void {
+  protected setAllStates(allStatesData: StatesModel): void {
     const keys = Object.keys(allStatesData) as Array<keyof StatesModel>;
     this.privateState.update((currentValue) => ({
       ...currentValue,
